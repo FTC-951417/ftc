@@ -37,10 +37,9 @@ import com.qualcomm.robotcore.util.Range;
 public class CardbotTeleopTank_Iterative extends OpMode{
 
     /* Declare OpMode members. */
-    HardwareCardbot robot       = new HardwareCardbot(); // use the class created to define a Pushbot's hardware
-                                                         // could also use HardwarePushbotMatrix class.
-    double          clawOffset  = 0.0 ;                  // Servo mid position
-    final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
+    HardwareCardbot robot       = new HardwareCardbot();
+    double          clawOffset  = 0.0 ;
+    final double    CLAW_SPEED  = 0.02 ;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -50,10 +49,16 @@ public class CardbotTeleopTank_Iterative extends OpMode{
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
+        /* FTC Relic Recovery rules state
+         *
+         */
         robot.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Initiating Manual Drive Mode...");
+        try {
+            Thread.sleep(100);
+        } catch(InterruptedException e){ telemetry.addData("Say", "Sleep interrupted! Tell a programmer!"); }
         telemetry.addData("Say", "Hit play to start control.");
         telemetry.update();
     }
