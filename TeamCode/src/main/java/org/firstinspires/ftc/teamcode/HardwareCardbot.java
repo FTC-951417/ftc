@@ -66,9 +66,9 @@ public class HardwareCardbot
         leftDrive2 = hwMap.get(DcMotor.class, "left_drive2");
         rightDrive2= hwMap.get(DcMotor.class, "right_drive2");
         leftDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        rightDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         leftDrive2.setDirection(DcMotor.Direction.FORWARD);
-        rightDrive2.setDirection(DcMotor.Direction.REVERSE);
+        rightDrive2.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all motors to zero power
         leftDrive.setPower(0);

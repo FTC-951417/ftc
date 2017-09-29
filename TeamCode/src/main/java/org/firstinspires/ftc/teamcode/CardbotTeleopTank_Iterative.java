@@ -55,6 +55,7 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         telemetry.addData("Say", "Hello drivers!");
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Initiating Manual Drive Mode...");
+        telemetry.update();
         try {
             Thread.sleep(100);
         } catch(InterruptedException e){ telemetry.addData("Say", "Sleep interrupted! Tell a programmer!"); }
@@ -103,6 +104,7 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         // Send telemetry message to signify robot running;
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
+        telemetry.update();
     }
 
     /*
@@ -110,5 +112,7 @@ public class CardbotTeleopTank_Iterative extends OpMode {
      */
     @Override
     public void stop() {
+        telemetry.addData("Say", "Robot is stopped!");
+        telemetry.update();
     }
 }
