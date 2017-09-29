@@ -33,13 +33,12 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
+
 @TeleOp(name="Manual Mode", group="Cardbot")
-public class CardbotTeleopTank_Iterative extends OpMode{
+public class CardbotTeleopTank_Iterative extends OpMode {
 
     /* Declare OpMode members. */
     HardwareCardbot robot       = new HardwareCardbot();
-    double          clawOffset  = 0.0 ;
-    final double    CLAW_SPEED  = 0.02 ;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -53,7 +52,7 @@ public class CardbotTeleopTank_Iterative extends OpMode{
          *
          */
         robot.init(hardwareMap);
-
+        telemetry.addData("Say", "Hello drivers!");
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Initiating Manual Drive Mode...");
         try {
@@ -94,29 +93,14 @@ public class CardbotTeleopTank_Iterative extends OpMode{
         right = -gamepad1.right_stick_y;
 
         robot.leftDrive.setPower(left);
+        robot.leftDrive2.setPower(left);
         robot.rightDrive.setPower(right);
+        robot.rightDrive2.setPower(right);
 
-        // Use gamepad left & right Bumpers to open and close the claw
-        if (gamepad1.right_bumper)
-            clawOffset += CLAW_SPEED;
-        else if (gamepad1.left_bumper)
-            clawOffset -= CLAW_SPEED;
 
-        // Move both servos to new position.  Assume servos are mirror image of each other.
-        clawOffset = Range.clip(clawOffset, -0.5, 0.5);
-        robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
-        robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
 
-        // Use gamepad buttons to move the arm up (Y) and down (A)
-        if (gamepad1.y)
-            robot.leftArm.setPower(robot.ARM_UP_POWER);
-        else if (gamepad1.a)
-            robot.leftArm.setPower(robot.ARM_DOWN_POWER);
-        else
-            robot.leftArm.setPower(0.0);
 
         // Send telemetry message to signify robot running;
-        telemetry.addData("claw",  "Offset = %.2f", clawOffset);
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
     }
