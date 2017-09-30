@@ -61,14 +61,25 @@ public class HardwareCardbot
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftDrive  = hwMap.get(DcMotor.class, "left_drive");
-        rightDrive = hwMap.get(DcMotor.class, "right_drive");
-        leftDrive2 = hwMap.get(DcMotor.class, "left_drive2");
-        rightDrive2= hwMap.get(DcMotor.class, "right_drive2");
-        leftDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        leftDrive  = hwMap.get(DcMotor.class, "ld"); // Left Drive
+        rightDrive = hwMap.get(DcMotor.class, "rd"); // Right Drive
+        leftDrive2 = hwMap.get(DcMotor.class, "ld2"); // Left Drive 2
+        rightDrive2= hwMap.get(DcMotor.class, "rd2"); // Right Drive 2
+        leftDrive.setDirection(DcMotor.Direction.FORWARD); // DEF: FORWARD
+        rightDrive.setDirection(DcMotor.Direction.REVERSE);// DEF: REVERSE
         leftDrive2.setDirection(DcMotor.Direction.FORWARD);
-        rightDrive2.setDirection(DcMotor.Direction.FORWARD);
+        rightDrive2.setDirection(DcMotor.Direction.REVERSE);
+
+
+        /*       * ROBOT OUTLINE *
+         *      * Outlines Config *
+         *   ld  <- :---------: -> rd
+         *          |---------|
+         *          |---------|
+         *          |-BTRY----|
+         *   ld2 <- :--REVHB--: -> rd2
+         *
+         */
 
         // Set all motors to zero power
         leftDrive.setPower(0);
