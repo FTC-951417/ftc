@@ -67,8 +67,8 @@ public class HardwareCardbot
         rightDrive2= hwMap.get(DcMotor.class, "rd2"); // Right Drive 2
         leftDrive.setDirection(DcMotor.Direction.FORWARD); // DEF: FORWARD
         rightDrive.setDirection(DcMotor.Direction.REVERSE);// DEF: REVERSE
-        leftDrive2.setDirection(DcMotor.Direction.FORWARD);
-        rightDrive2.setDirection(DcMotor.Direction.REVERSE);
+        leftDrive2.setDirection(DcMotor.Direction.REVERSE);
+        rightDrive2.setDirection(DcMotor.Direction.FORWARD);
 
 
         /*       * ROBOT OUTLINE *
