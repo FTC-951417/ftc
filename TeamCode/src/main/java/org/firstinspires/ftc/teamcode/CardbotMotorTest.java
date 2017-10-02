@@ -15,12 +15,13 @@ public class CardbotMotorTest extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareCardbot         robot   = new HardwareCardbot();   // Use a Pushbot's hardware
-    private ElapsedTime     runtime = new ElapsedTime();
 
 
     @Override
     public void runOpMode() {
         long s = 1000;
+        telemetry.addData("Say", "Starting");
+        telemetry.update();
         try {
             robot.leftDrive.setPower(1);
             Thread.sleep(5 * s);
@@ -46,6 +47,7 @@ public class CardbotMotorTest extends LinearOpMode {
             telemetry.update();
             robot.rightDrive2.setPower(0);
         } catch(Exception e) {}
+        //TODO: FIX EXCEPTIONS BEING THROWN!
     }
 
 }
