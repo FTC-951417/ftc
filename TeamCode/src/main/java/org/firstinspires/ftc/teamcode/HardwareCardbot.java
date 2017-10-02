@@ -34,6 +34,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 
 public class HardwareCardbot
 {
@@ -66,9 +67,10 @@ public class HardwareCardbot
         leftDrive2 = hwMap.get(DcMotor.class, "ld2"); // Left Drive 2
         rightDrive2= hwMap.get(DcMotor.class, "rd2"); // Right Drive 2
         leftDrive.setDirection(DcMotor.Direction.FORWARD); // DEF: FORWARD
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);// DEF: REVERSE
-        leftDrive2.setDirection(DcMotor.Direction.REVERSE);
+        rightDrive.setDirection(DcMotor.Direction.FORWARD);// DEF: REVERSE
+        leftDrive2.setDirection(DcMotor.Direction.FORWARD);
         rightDrive2.setDirection(DcMotor.Direction.FORWARD);
+        reverse(leftDrive2);
 
 
         /*       * ROBOT OUTLINE *
@@ -100,5 +102,16 @@ public class HardwareCardbot
         // Hi
 
     }
+
+
+    public void reverse(DcMotor motorIn) {
+        Direction motorCurDir = motorIn.getDirection();
+        if(motorCurDir == Direction.FORWARD) {
+            motorIn.setDirection(Direction.REVERSE);
+        } else {
+            motorIn.setDirection(Direction.FORWARD);
+        }
+    }
+
  }
 
