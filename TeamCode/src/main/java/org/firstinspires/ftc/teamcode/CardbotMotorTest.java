@@ -11,7 +11,6 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 
 @Autonomous(name="Motor Test", group="Cardbot")
-@Disabled
 public class CardbotMotorTest extends LinearOpMode {
 
     /* Declare OpMode members. */
