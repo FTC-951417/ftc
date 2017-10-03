@@ -113,8 +113,8 @@ public class CardbotTeleopTank_Iterative extends OpMode {
             lgrip += 0.02;
             rgrip -= 0.02; // Right grip is reversed, 1 on right is 0 on left, etc.
         }
-        lgrip = Range.clip(lgrip, 0, 0.55);
-        rgrip = Range.clip(rgrip, 0.45, 1);
+        lgrip = Range.clip(lgrip, 0, 0.32); // Stop arm from crushing itself
+        rgrip = Range.clip(rgrip, 0.58, 1); // * ^   ^    ^     ^       ^
         telemetry.addData("grip", lgrip);
         robot.leftClaw.setPosition(lgrip);
         robot.rightClaw.setPosition(rgrip);
