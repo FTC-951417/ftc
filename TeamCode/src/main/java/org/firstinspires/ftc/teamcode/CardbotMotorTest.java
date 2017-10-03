@@ -22,31 +22,46 @@ public class CardbotMotorTest extends LinearOpMode {
         long s = 1000;
         telemetry.addData("Say", "Starting");
         telemetry.update();
+
+        robot.leftDrive.setPower(1);
         try {
-            robot.leftDrive.setPower(1);
             Thread.sleep(5 * s);
-            telemetry.addData("Say", "ld");
-            telemetry.update();
-            robot.leftDrive.setPower(0);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        telemetry.addData("Say", "ld");
+        telemetry.update();
+        robot.leftDrive.setPower(0);
 
-            robot.leftDrive2.setPower(1);
+        robot.leftDrive2.setPower(1);
+        try {
             Thread.sleep(5 * s);
-            telemetry.addData("Say", "ld2");
-            telemetry.update();
-            robot.leftDrive2.setPower(0);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        telemetry.addData("Say", "ld2");
+        telemetry.update();
+        robot.leftDrive2.setPower(0);
 
-            robot.rightDrive.setPower(1);
+        robot.rightDrive.setPower(1);
+        try {
             Thread.sleep(5 * s);
-            telemetry.addData("Say", "rd");
-            telemetry.update();
-            robot.rightDrive.setPower(0);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        telemetry.addData("Say", "rd");
+        telemetry.update();
+        robot.rightDrive.setPower(0);
 
-            robot.rightDrive2.setPower(1);
+        robot.rightDrive2.setPower(1);
+        try {
             Thread.sleep(5 * s);
-            telemetry.addData("Say", "rd2");
-            telemetry.update();
-            robot.rightDrive2.setPower(0);
-        } catch(Exception e) {}
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        telemetry.addData("Say", "rd2");
+        telemetry.update();
+        robot.rightDrive2.setPower(0);
         //TODO: FIX EXCEPTIONS BEING THROWN!
     }
 
