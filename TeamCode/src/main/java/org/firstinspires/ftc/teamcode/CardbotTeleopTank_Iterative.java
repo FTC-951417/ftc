@@ -93,15 +93,21 @@ public class CardbotTeleopTank_Iterative extends OpMode {
 
 
         double left;
-        double right;
+        double leftX;
+        //double right;
 
-        // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
+        // Arcade mode
+
         left = -gamepad1.left_stick_y;
-        right = -gamepad1.right_stick_y;
-        robot.leftDrive.setPower(left);
-        robot.leftDrive2.setPower(left);
-        robot.rightDrive.setPower(right);
-        robot.rightDrive2.setPower(right);
+        leftX = gamepad1.left_stick_x;
+        double leftPower = left + leftX;
+        double rightPower = left - leftX;
+        leftPower = Range.clip(leftPower, -1, 1);
+        rightPower = Range.clip(rightPower, -1, 1);
+        //right = -gamepad1.right_stick_y;
+        setLeft(leftPower);
+        setRight(rightPower);
+
 
         if(gamepad1.left_bumper) {
             // Reduce grip
@@ -115,14 +121,24 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         }
         lgrip = Range.clip(lgrip, 0, 0.32); // Stop arm from crushing itself
         rgrip = Range.clip(rgrip, 0.58, 1); // * ^   ^    ^     ^       ^
-        telemetry.addData("grip", lgrip);
+        telemetry.addData("Grippage", "%" + String.valueOf(lgrip * 312.5));
         robot.leftClaw.setPosition(lgrip);
         robot.rightClaw.setPosition(rgrip);
 
         // Send telemetry message to signify robot running;
-        telemetry.addData("left",  "%.2f", left);
-        telemetry.addData("right", "%.2f", right);
+        telemetry.addData("Left Power",  "%.2f", "%" + String.valueOf(leftPower * 100));
+        telemetry.addData("Right Power", "%.2f", "%" + String.valueOf(rightPower * 100);
         telemetry.update();
+    }
+
+    public void setLeft(double power){
+        robot.leftDrive.setPower(power);
+        robot.leftDrive2.setPower(power);
+    }
+
+    public void setRight(double power){
+        robot.rightDrive.setPower(power);
+        robot.rightDrive2.setPower(power);
     }
 
     /*
