@@ -38,7 +38,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 
 public class HardwareCardbot
 {
-    /* Public OpMode members. */
+
     public DcMotor  leftDrive   = null;
     public DcMotor  rightDrive  = null;
     public DcMotor  leftDrive2  = null;
@@ -47,21 +47,17 @@ public class HardwareCardbot
 
 
 
-    /* local OpMode members. */
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
 
-    /* Constructor */
-    public HardwareCardbot(){
+    public HardwareCardbot(){}
 
-    }
 
-    /* Initialize standard Hardware interfaces */
     public void init(HardwareMap ahwMap) {
-        // Save reference to Hardware map
+
         hwMap = ahwMap;
 
-        // Define and Initialize Motors
+
         leftDrive  = hwMap.get(DcMotor.class, "ld"); // Left Drive
         rightDrive = hwMap.get(DcMotor.class, "rd"); // Right Drive
         leftDrive2 = hwMap.get(DcMotor.class, "ld2"); // Left Drive 2
@@ -83,23 +79,19 @@ public class HardwareCardbot
          *
          */
 
-        // Set all motors to zero power
+
         leftDrive.setPower(0);
         rightDrive.setPower(0);
         leftDrive2.setPower(0);
         rightDrive2.setPower(0);
 
 
-        // Set all motors to run without encoders.
-        // May want to use RUN_USING_ENCODERS if encoders are installed.
-
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftDrive2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        // Define and initialize ALL installed servos.
-        // Hi
+
 
     }
 
