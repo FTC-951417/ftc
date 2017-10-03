@@ -40,6 +40,9 @@ public class CardbotTeleopTank_Iterative extends OpMode {
     /* Declare OpMode members. */
     HardwareCardbot robot       = new HardwareCardbot();
 
+    private double lgrip = 0;
+    private double rgrip = 1;
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -100,8 +103,21 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         robot.rightDrive.setPower(right);
         robot.rightDrive2.setPower(right);
 
-
-
+        if(gamepad1.left_bumper) {
+            // Reduce grip
+            lgrip -= 0.02;
+            rgrip += 0.02; // Right grip is reversed, 1 on right is 0 on left, etc.
+        }
+        if(gamepad1.right_bumper){
+            // Increase grip
+            lgrip += 0.02;
+            rgrip -= 0.02; // Right grip is reversed, 1 on right is 0 on left, etc.
+        }
+        lgrip = Range.clip(lgrip, 0, 0.55);
+        rgrip = Range.clip(rgrip, 0.45, 1);
+        telemetry.addData("grip", lgrip);
+        robot.leftClaw.setPosition(lgrip);
+        robot.rightClaw.setPosition(rgrip);
 
         // Send telemetry message to signify robot running;
         telemetry.addData("left",  "%.2f", left);

@@ -44,6 +44,9 @@ public class HardwareCardbot
     public DcMotor  leftDrive2  = null;
     public DcMotor  rightDrive2 = null;
 
+    public Servo leftClaw = null;
+    public Servo rightClaw = null;
+
 
 
 
@@ -66,7 +69,12 @@ public class HardwareCardbot
         rightDrive.setDirection(DcMotor.Direction.FORWARD);// DEF: REVERSE
         leftDrive2.setDirection(DcMotor.Direction.FORWARD);
         rightDrive2.setDirection(DcMotor.Direction.FORWARD);
+        reverse(leftDrive);
         reverse(leftDrive2);
+        reverse(rightDrive2);
+
+        leftClaw = hwMap.get(Servo.class, "lc");
+        rightClaw = hwMap.get(Servo.class, "rc");
 
 
         /*       * ROBOT OUTLINE *
@@ -91,6 +99,8 @@ public class HardwareCardbot
         leftDrive2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        leftClaw.setPosition(0);
+        rightClaw.setPosition(1);
 
 
     }
