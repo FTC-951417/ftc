@@ -127,7 +127,7 @@ public class CardbotTeleopTank_Iterative extends OpMode {
 
         // Send telemetry message to signify robot running;
         telemetry.addData("Left Power",  "%.2f", "%" + String.valueOf(leftPower * 100));
-        telemetry.addData("Right Power", "%.2f", "%" + String.valueOf(rightPower * 100);
+        telemetry.addData("Right Power", "%.2f", "%" + String.valueOf(rightPower * 100));
         telemetry.update();
     }
 
