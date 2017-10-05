@@ -94,12 +94,22 @@ public class CardbotTeleopTank_Iterative extends OpMode {
 
         double left;
         double leftX;
+        double rt;
         //double right;
 
         // Arcade mode
-
         left = -gamepad1.left_stick_y;
         leftX = gamepad1.left_stick_x;
+        rt = gamepad1.right_trigger;
+        if(rt > 0) {
+            left = left - rt;
+            if(left < 0) {
+                left = 0;
+            }
+        }
+        if(rt == 1) {
+            left = 0.5;
+        }
         double leftPower = left + leftX;
         double rightPower = left - leftX;
         leftPower = Range.clip(leftPower, -1, 1);
