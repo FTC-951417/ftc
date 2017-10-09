@@ -102,13 +102,10 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         leftX = gamepad1.left_stick_x;
         rt = gamepad1.right_trigger;
         if(rt > 0) {
-            left = left - rt;
+            left = left - (rt / 2);
             if(left < 0) {
                 left = 0;
             }
-        }
-        if(rt == 1) {
-            left = 0.5;
         }
         double leftPower = left + leftX;
         double rightPower = left - leftX;
