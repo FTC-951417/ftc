@@ -41,8 +41,8 @@ public class HardwareCardbot
 
     public DcMotor  leftDrive   = null;
     public DcMotor  rightDrive  = null;
-    public DcMotor  leftDrive2  = null;
-    public DcMotor  rightDrive2 = null;
+    public DcMotor  lift = null;
+
 
     public Servo leftClaw = null;
     public Servo rightClaw = null;
@@ -63,15 +63,10 @@ public class HardwareCardbot
 
         leftDrive  = hwMap.get(DcMotor.class, "ld"); // Left Drive
         rightDrive = hwMap.get(DcMotor.class, "rd"); // Right Drive
-        leftDrive2 = hwMap.get(DcMotor.class, "ld2"); // Left Drive 2
-        rightDrive2= hwMap.get(DcMotor.class, "rd2"); // Right Drive 2
-        leftDrive.setDirection(DcMotor.Direction.FORWARD); // DEF: FORWARD
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);// DEF: REVERSE
-        leftDrive2.setDirection(DcMotor.Direction.FORWARD);
-        rightDrive2.setDirection(DcMotor.Direction.FORWARD);
-        reverse(leftDrive);
-        reverse(leftDrive2);
-        reverse(rightDrive2);
+        lift = hwMap.get(DcMotor.class, "lift");
+        leftDrive.setDirection(Direction.FORWARD); // DEF: FORWARD
+        rightDrive.setDirection(Direction.REVERSE);// DEF: REVERSE
+        lift.setDirection(Direction.FORWARD);
 
         leftClaw = hwMap.get(Servo.class, "lc");
         rightClaw = hwMap.get(Servo.class, "rc");
@@ -90,14 +85,12 @@ public class HardwareCardbot
 
         leftDrive.setPower(0);
         rightDrive.setPower(0);
-        leftDrive2.setPower(0);
-        rightDrive2.setPower(0);
+        lift.setPower(0);
 
 
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftDrive2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightDrive2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         leftClaw.setPosition(0);
         rightClaw.setPosition(1);
