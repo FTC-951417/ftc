@@ -177,7 +177,9 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         robot.leftDrive2.setPower(-pwr);
     }
 
-    public void
+    public void strafe(boolean goRight) {
+        
+    }
 
     /*
      * Code to run ONCE after the driver hits STOP
