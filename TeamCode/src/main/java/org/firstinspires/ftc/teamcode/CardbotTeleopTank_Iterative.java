@@ -100,20 +100,25 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         // Arcade mode
         left = -gamepad1.left_stick_y;
         leftX = gamepad1.left_stick_x;
-        rt = gamepad1.right_trigger;
-        if(rt > 0) {
-            left = left - (rt / 2);
-            if(left < 0) {
-                left = 0;
+        double right = -gamepad1.right_stick_y;
+        double rightX = gamepad1.right_stick_x;
+        if(!(rightX > 0 | right > 0)) {
+            double leftPower = left + leftX;
+            double rightPower = left - leftX;
+            leftPower = Range.clip(leftPower, -1, 1);
+            rightPower = Range.clip(rightPower, -1, 1);
+            //right = -gamepad1.right_stick_y;
+            setLeft(leftPower);
+            setRight(rightPower);
+        } else {
+            if((rightX > 0.5 | rightX < -0.5) && !(right > 0)) {
+                if(rightX > 0.5) {
+                    robot.ld
+                }
+            } else if((rightX > 0.5 | rightX < -0.5)) {
+
             }
         }
-        double leftPower = left + leftX;
-        double rightPower = left - leftX;
-        leftPower = Range.clip(leftPower, -1, 1);
-        rightPower = Range.clip(rightPower, -1, 1);
-        //right = -gamepad1.right_stick_y;
-        setLeft(leftPower);
-        setRight(rightPower);
 
 
         if(gamepad1.left_bumper) {
@@ -147,6 +152,32 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         robot.rightDrive.setPower(power);
         robot.rightDrive2.setPower(power);
     }
+
+    /* Start mekanum functions */
+    /* rd  + ld2 = Diag left
+       ld + rd2  = Diag right
+       rd + rd2  = Strafe left
+       ld + ld2  = Strafe right */
+
+    public void diagLeft(boolean positive) {
+        int pwr = positive ? 1 : -1;
+        robot.rightDrive.setPower(pwr);
+        robot.leftDrive2.setPower(pwr);
+        // Opposites
+        robot.rightDrive2.setPower(-pwr);
+        robot.leftDrive.setPower(-pwr);
+    }
+
+    public void diagRight(boolean positive) {
+        int pwr = positive ? 1 : -1;
+        robot.leftDrive.setPower(pwr);
+        robot.rightDrive2.setPower(pwr);
+        // Opposites
+        robot.rightDrive.setPower(-pwr);
+        robot.leftDrive2.setPower(-pwr);
+    }
+
+    public void
 
     /*
      * Code to run ONCE after the driver hits STOP
