@@ -42,6 +42,8 @@ public class CardbotTeleopTank_Iterative extends OpMode {
 
     private double lgrip = 0;
     private double rgrip = 1;
+    private int count = 0;
+    private int lascount = -1;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -57,12 +59,12 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         robot.init(hardwareMap);
         telemetry.addData("Say", "Hello drivers!");
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Initiating Manual Drive Mode...");
+        telemetry.addData("Say2", "Initiating Manual Drive Mode...");
         telemetry.update();
         try {
             Thread.sleep(100);
-        } catch(InterruptedException e){ telemetry.addData("Say", "Sleep interrupted! Tell a programmer!"); }
-        telemetry.addData("Say", "Hit play to start control.");
+        } catch(InterruptedException e){ telemetry.addData("Say3", "Sleep interrupted! Tell a programmer!"); }
+        telemetry.addData("Say4", "Hit play to start control.");
         telemetry.update();
     }
 
@@ -79,8 +81,8 @@ public class CardbotTeleopTank_Iterative extends OpMode {
     @Override
     public void start() {
         telemetry.addData("Say", "Controllers, please designate control numbers.");
-        telemetry.addData("Say", "#1 hit Start+A");
-        telemetry.addData("Say", "#2 hit Start+B");
+        telemetry.addData("Say2", "#1 hit Start+A");
+        telemetry.addData("Say3", "#2 hit Start+B");
         telemetry.update();
     }
 
@@ -89,20 +91,22 @@ public class CardbotTeleopTank_Iterative extends OpMode {
      */
     @Override
     public void loop() {
-
+        lascount++;
+        count++;
 
 
         double left;
         double leftX;
         double rt;
-        //double right;
 
         // Arcade mode
         left = -gamepad1.left_stick_y;
         leftX = gamepad1.left_stick_x;
-        double right = -gamepad1.right_stick_y;
+        double rightY = -gamepad1.right_stick_y;
         double rightX = gamepad1.right_stick_x;
-        if(!(rightX > 0 | right > 0)) {
+        boolean rightNotInRange = isNotInRangeExcludes(rightY, -0.5, 0.5);
+        boolean rightXNotInRange = isNotInRangeExcludes(rightX, -0.5, 0.5);
+        if(!rightXNotInRange && !rightNotInRange) { // Right stick is not greater than 0.5 in any direction from 0.
             double leftPower = left + leftX;
             double rightPower = left - leftX;
             leftPower = Range.clip(leftPower, -1, 1);
@@ -111,12 +115,23 @@ public class CardbotTeleopTank_Iterative extends OpMode {
             setLeft(leftPower);
             setRight(rightPower);
         } else {
-            if((rightX > 0.5 | rightX < -0.5) && !(right > 0)) {
-                if(rightX > 0.5) {
-                    robot.ld
-                }
-            } else if((rightX > 0.5 | rightX < -0.5)) {
-
+            if(rightXNotInRange && !rightNotInRange) { // X is not in 0.5 to -0.5 range and Y is not in 0.5 to -0.5 range
+                // TL;DR joystick is not up or down, just side to side.
+                if(rightX > 0.5) // X is to the right
+                    strafe(true); // Strafe right
+                if(rightX < -0.5) // X is to the left
+                    strafe(false); // Strafe left
+            } else if(rightXNotInRange && rightNotInRange) { //X is not in range 0.5 to -0.5
+                    //This means that X and Y are both above 0.5 or less than -0.5 aka it's in a diagonal direction.
+                    if(rightX < -0.5 && rightY > 0.5){ // X is to the left and Y is positive (Quad I)
+                        diagLeft(true); // Forward left
+                    } else if(rightX > 0.5 && rightY > 0.5) { // X is to the right and Y is positive (Quad II)
+                        diagRight(true); // Forward right
+                    } else if(rightX < -0.5 && rightY < -0.5) { // X is to the left and Y is negative (Quad III)
+                        diagLeft(false); // Back left
+                    } else if(rightX > 0.5 && rightY < -0.5) { // X is to the right and Y is negative (Quad IV)
+                        diagRight(false); // Back right
+                    }
             }
         }
 
@@ -138,8 +153,9 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         robot.rightClaw.setPosition(rgrip);
 
         // Send telemetry message to signify robot running;
-        telemetry.addData("Left Power", "%" + String.valueOf(leftPower * 100));
-        telemetry.addData("Right Power", "%" + String.valueOf(rightPower * 100));
+        //telemetry.addData("Left Power", "%" + String.valueOf(leftPower * 100));
+        //telemetry.addData("Right Power", "%" + String.valueOf(rightPower * 100));
+        //TODO: Redo drive telemetry
         telemetry.update();
     }
 
@@ -179,6 +195,36 @@ public class CardbotTeleopTank_Iterative extends OpMode {
 
     public void strafe(boolean goRight) {
         
+    }
+
+    /* Range functions */
+
+    public static boolean isNotInRangeExcludes(double in, double min, double max) {
+        if(in < min && in > max) {
+            return true;
+        }
+        return false;
+    }
+    @SuppressWarnings("unused")
+    public static boolean isNotInRangeIncludes(double in, double min, double max) {
+        if(in <= min && in >= max) {
+            return true;
+        }
+        return false;
+    }
+    @SuppressWarnings("unused")
+    public static boolean isInRangeExcludes(double in, double min, double max) {
+        if(in > min && in < max) {
+            return true;
+        }
+        return false;
+    }
+    @SuppressWarnings("unused")
+    public static boolean isInRangeIncludes(double in, double min, double max) {
+        if(in >= min && in <= max) {
+            return true;
+        }
+        return false;
     }
 
     /*
