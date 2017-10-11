@@ -106,14 +106,16 @@ public class CardbotTeleopTank_Iterative extends OpMode {
             rightPower = Range.clip(rightPower, -1, 1);
             setLeft(leftPower);
             setRight(rightPower);
+            telemetry.addData("lPower", leftPower);
+            telemetry.addData("rPower", rightPower);
         } else {
-            if(rightXNotInRange && !rightNotInRange) { // X is not in 0.5 to -0.5 range and Y is not in 0.5 to -0.5 range
+            if(rightXNotInRange && rightNotInRange) { // X is not in 0.5 to -0.5 range and Y is in 0.5 to -0.5 range
                 // TL;DR joystick is not up or down, just side to side.
                 if(rightX > 0.5) // X is to the right
                     strafe(true); // Strafe right
                 if(rightX < -0.5) // X is to the left
                     strafe(false); // Strafe left
-            } else if(rightXNotInRange && rightNotInRange) { //X is not in range 0.5 to -0.5 and y is not in range " " "
+            } else if(rightXNotInRange && isNotInRangeExcludes(rightY, -0.3, 0.3)) { //X is not in range 0.5 to -0.5 and y is not in range -0.3 to 0.3
                     //This means that X and Y are both above 0.5 or less than -0.5 aka it's in a diagonal direction.
                     if(rightX < -0.5 && rightY > 0.3){ // X is to the left and Y is positive (Quad I)
                         diagLeft(true); // Forward left
@@ -168,7 +170,7 @@ public class CardbotTeleopTank_Iterative extends OpMode {
 
     /* Start mecanum functions */
     /*  Remember to do the opposites of each set of motor in reverse!
-       rd  + ld2 = Diag left
+       rd + ld2 = Diag left
        ld + rd2  = Diag right
        rd + rd2  = Strafe left
        ld + ld2  = Strafe right */
