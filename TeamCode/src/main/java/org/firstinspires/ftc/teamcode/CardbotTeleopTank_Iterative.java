@@ -42,6 +42,8 @@ public class CardbotTeleopTank_Iterative extends OpMode {
 
     private double lgrip = 0;
     private double rgrip = 1;
+    private boolean diagMode = false;
+    private boolean forwardDiagMode = true;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -92,16 +94,25 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         double left;
         double leftX;
 
-        // Arcade mode
+        if(gamepad1.y) {
+            diagMode = true;
+        }
+        if(gamepad1.dpad_up) {
+            forwardDiagMode = true;
+        }
+        if(gamepad1.dpad_down) {
+            forwardDiagMode = false;
+        }
+
         left = -gamepad1.left_stick_y;
         leftX = gamepad1.left_stick_x;
         double rightY = -gamepad1.right_stick_y;
         double rightX = gamepad1.right_stick_x;
         boolean rightNotInRange = isNotInRangeExcludes(rightY, -0.5, 0.5);
         boolean rightXNotInRange = isNotInRangeExcludes(rightX, -0.5, 0.5);
-        if(!rightXNotInRange && !rightNotInRange) { // Right stick is not greater than 0.5 in any direction from 0.
-            double leftPower = left + leftX;
-            double rightPower = left - leftX;
+        if (!(gamepad1.dpad_down | gamepad1.dpad_up | gamepad1.dpad_left | gamepad1.dpad_right)) {
+            double leftPower = left;
+            double rightPower = rightY;
             leftPower = Range.clip(leftPower, -1, 1);
             rightPower = Range.clip(rightPower, -1, 1);
             setLeft(leftPower);
@@ -109,27 +120,16 @@ public class CardbotTeleopTank_Iterative extends OpMode {
             telemetry.addData("lPower", leftPower);
             telemetry.addData("rPower", rightPower);
         } else {
-            if(rightXNotInRange && rightNotInRange) { // X is not in 0.5 to -0.5 range and Y is in 0.5 to -0.5 range
-                // TL;DR joystick is not up or down, just side to side.
-                if(rightX > 0.5) // X is to the right
-                    strafe(true); // Strafe right
-                if(rightX < -0.5) // X is to the left
-                    strafe(false); // Strafe left
-            } else if(rightXNotInRange && isNotInRangeExcludes(rightY, -0.3, 0.3)) { //X is not in range 0.5 to -0.5 and y is not in range -0.3 to 0.3
-                    //This means that X and Y are both above 0.5 or less than -0.5 aka it's in a diagonal direction.
-                    if(rightX < -0.5 && rightY > 0.3){ // X is to the left and Y is positive (Quad I)
-                        diagLeft(true); // Forward left
-                    } else if(rightX > 0.5 && rightY > 0.3) { // X is to the right and Y is positive (Quad II)
-                        diagRight(true); // Forward right
-                    } else if(rightX < -0.5 && rightY < -0.3) { // X is to the left and Y is negative (Quad III)
-                        diagLeft(false); // Back left
-                    } else if(rightX > 0.5 && rightY < -0.3) { // X is to the right and Y is negative (Quad IV)
-                        diagRight(false); // Back right
-                    }
+            if(!diagMode) {
+                if (gamepad1.dpad_left)
+                    strafe(false);
+                if (gamepad1.dpad_right)
+                    strafe(true);
             } else {
-                // None of these are applicable, set power to 0 for insurance.
-                setLeft(0);
-                setRight(0);
+                if (gamepad1.dpad_left)
+                    diagLeft(forwardDiagMode);
+                if (gamepad1.dpad_right)
+                    diagRight(forwardDiagMode);
             }
         }
 
@@ -150,11 +150,6 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         telemetry.addData("Grippage", "%" + String.valueOf(lgrip * 312.5));
         robot.leftClaw.setPosition(lgrip);
         robot.rightClaw.setPosition(rgrip);
-
-        // Send telemetry message to signify robot running;
-        //telemetry.addData("Left Power", "%" + String.valueOf(leftPower * 100));
-        //telemetry.addData("Right Power", "%" + String.valueOf(rightPower * 100));
-        //TODO: Redo drive telemetry
         telemetry.update();
     }
 
