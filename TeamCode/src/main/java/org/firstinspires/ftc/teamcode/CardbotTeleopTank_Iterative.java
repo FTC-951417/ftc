@@ -42,8 +42,6 @@ public class CardbotTeleopTank_Iterative extends OpMode {
 
     private double lgrip = 0;
     private double rgrip = 1;
-    private int count = 0;
-    private int lascount = -1;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -91,13 +89,8 @@ public class CardbotTeleopTank_Iterative extends OpMode {
      */
     @Override
     public void loop() {
-        lascount++;
-        count++;
-
-
         double left;
         double leftX;
-        double rt;
 
         // Arcade mode
         left = -gamepad1.left_stick_y;
@@ -111,7 +104,6 @@ public class CardbotTeleopTank_Iterative extends OpMode {
             double rightPower = left - leftX;
             leftPower = Range.clip(leftPower, -1, 1);
             rightPower = Range.clip(rightPower, -1, 1);
-            //right = -gamepad1.right_stick_y;
             setLeft(leftPower);
             setRight(rightPower);
         } else {
@@ -121,7 +113,7 @@ public class CardbotTeleopTank_Iterative extends OpMode {
                     strafe(true); // Strafe right
                 if(rightX < -0.5) // X is to the left
                     strafe(false); // Strafe left
-            } else if(rightXNotInRange && rightNotInRange) { //X is not in range 0.5 to -0.5
+            } else if(rightXNotInRange && rightNotInRange) { //X is not in range 0.5 to -0.5 and y is not in range " " "
                     //This means that X and Y are both above 0.5 or less than -0.5 aka it's in a diagonal direction.
                     if(rightX < -0.5 && rightY > 0.5){ // X is to the left and Y is positive (Quad I)
                         diagLeft(true); // Forward left
@@ -132,9 +124,14 @@ public class CardbotTeleopTank_Iterative extends OpMode {
                     } else if(rightX > 0.5 && rightY < -0.5) { // X is to the right and Y is negative (Quad IV)
                         diagRight(false); // Back right
                     }
+            } else {
+                // None of these are applicable, set power to 0 for insurance.
+                setLeft(0);
+                setRight(0);
             }
         }
 
+        // Control servos with bumpers
 
         if(gamepad1.left_bumper) {
             // Reduce grip
@@ -159,23 +156,24 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         telemetry.update();
     }
 
-    public void setLeft(double power){
+    private void setLeft(double power){
         robot.leftDrive.setPower(power);
         robot.leftDrive2.setPower(power);
     }
 
-    public void setRight(double power){
+    private void setRight(double power){
         robot.rightDrive.setPower(power);
         robot.rightDrive2.setPower(power);
     }
 
-    /* Start mekanum functions */
-    /* rd  + ld2 = Diag left
+    /* Start mecanum functions */
+    /*  Remember to do the opposites of each set of motor in reverse!
+       rd  + ld2 = Diag left
        ld + rd2  = Diag right
        rd + rd2  = Strafe left
        ld + ld2  = Strafe right */
 
-    public void diagLeft(boolean positive) {
+    private void diagLeft(boolean positive) {
         int pwr = positive ? 1 : -1;
         robot.rightDrive.setPower(pwr);
         robot.leftDrive2.setPower(pwr);
@@ -184,7 +182,7 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         robot.leftDrive.setPower(-pwr);
     }
 
-    public void diagRight(boolean positive) {
+    private void diagRight(boolean positive) {
         int pwr = positive ? 1 : -1;
         robot.leftDrive.setPower(pwr);
         robot.rightDrive2.setPower(pwr);
@@ -193,38 +191,31 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         robot.leftDrive2.setPower(-pwr);
     }
 
-    public void strafe(boolean goRight) {
-        
+    private void strafe(boolean goRight) {
+        int pwr = goRight ? 1 : -1;
+        robot.leftDrive.setPower(pwr);
+        robot.leftDrive2.setPower(-pwr);
+        // Opposites
+        robot.rightDrive.setPower(-pwr);
+        robot.rightDrive2.setPower(pwr);
     }
 
     /* Range functions */
 
     public static boolean isNotInRangeExcludes(double in, double min, double max) {
-        if(in < min && in > max) {
-            return true;
-        }
-        return false;
+        return in < min && in > max;
     }
     @SuppressWarnings("unused")
     public static boolean isNotInRangeIncludes(double in, double min, double max) {
-        if(in <= min && in >= max) {
-            return true;
-        }
-        return false;
+        return in <= min && in >= max;
     }
     @SuppressWarnings("unused")
     public static boolean isInRangeExcludes(double in, double min, double max) {
-        if(in > min && in < max) {
-            return true;
-        }
-        return false;
+        return in > min && in < max;
     }
     @SuppressWarnings("unused")
     public static boolean isInRangeIncludes(double in, double min, double max) {
-        if(in >= min && in <= max) {
-            return true;
-        }
-        return false;
+        return in >= min && in <= max;
     }
 
     /*
