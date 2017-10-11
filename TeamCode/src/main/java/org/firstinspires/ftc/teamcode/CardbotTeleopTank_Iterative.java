@@ -115,13 +115,13 @@ public class CardbotTeleopTank_Iterative extends OpMode {
                     strafe(false); // Strafe left
             } else if(rightXNotInRange && rightNotInRange) { //X is not in range 0.5 to -0.5 and y is not in range " " "
                     //This means that X and Y are both above 0.5 or less than -0.5 aka it's in a diagonal direction.
-                    if(rightX < -0.5 && rightY > 0.5){ // X is to the left and Y is positive (Quad I)
+                    if(rightX < -0.5 && rightY > 0.3){ // X is to the left and Y is positive (Quad I)
                         diagLeft(true); // Forward left
-                    } else if(rightX > 0.5 && rightY > 0.5) { // X is to the right and Y is positive (Quad II)
+                    } else if(rightX > 0.5 && rightY > 0.3) { // X is to the right and Y is positive (Quad II)
                         diagRight(true); // Forward right
-                    } else if(rightX < -0.5 && rightY < -0.5) { // X is to the left and Y is negative (Quad III)
+                    } else if(rightX < -0.5 && rightY < -0.3) { // X is to the left and Y is negative (Quad III)
                         diagLeft(false); // Back left
-                    } else if(rightX > 0.5 && rightY < -0.5) { // X is to the right and Y is negative (Quad IV)
+                    } else if(rightX > 0.5 && rightY < -0.3) { // X is to the right and Y is negative (Quad IV)
                         diagRight(false); // Back right
                     }
             } else {
@@ -177,6 +177,7 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         int pwr = positive ? 1 : -1;
         robot.rightDrive.setPower(pwr);
         robot.leftDrive2.setPower(pwr);
+        telemetry.addData("Turn Power", pwr);
         // Opposites
         robot.rightDrive2.setPower(-pwr);
         robot.leftDrive.setPower(-pwr);
@@ -186,6 +187,7 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         int pwr = positive ? 1 : -1;
         robot.leftDrive.setPower(pwr);
         robot.rightDrive2.setPower(pwr);
+        telemetry.addData("Diag Power", pwr);
         // Opposites
         robot.rightDrive.setPower(-pwr);
         robot.leftDrive2.setPower(-pwr);
@@ -195,6 +197,7 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         int pwr = goRight ? 1 : -1;
         robot.leftDrive.setPower(pwr);
         robot.leftDrive2.setPower(-pwr);
+        telemetry.addData("Strafe Power", pwr);
         // Opposites
         robot.rightDrive.setPower(-pwr);
         robot.rightDrive2.setPower(pwr);
