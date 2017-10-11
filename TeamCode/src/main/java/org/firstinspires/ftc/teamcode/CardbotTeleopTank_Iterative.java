@@ -181,7 +181,7 @@ public class CardbotTeleopTank_Iterative extends OpMode {
     }
 
     private void diagRight(boolean positive) {
-        int pwr = positive ? 1 : -1;
+        int pwr = positive ? 1 : -1; // TODO: Move reverse types to opposites because reverse right is actually reverse left.
         robot.leftDrive.setPower(pwr);
         robot.rightDrive2.setPower(pwr);
         telemetry.addData("Diag Power", pwr);
