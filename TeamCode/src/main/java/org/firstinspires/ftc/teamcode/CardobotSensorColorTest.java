@@ -104,7 +104,7 @@ public class CardobotSensorColorTest extends LinearOpMode {
         boolean bCurrState = false;
 
         // Get a reference to our sensor object.
-        colorSensor = hardwareMap.get(NormalizedColorSensor.class, "sc");
+        colorSensor = hardwareMap.get(NormalizedColorSensor.class, "beacon_sensor");
 
         // If possible, turn the light on in the beginning (it might already be on anyway,
         // we just make sure it is if we can).
@@ -150,14 +150,17 @@ public class CardobotSensorColorTest extends LinearOpMode {
                     .addData("r", "%.3f", colors.red)
                     .addData("g", "%.3f", colors.green)
                     .addData("b", "%.3f", colors.blue);
-
-            if(colors.red > 150 && colors.blue < 100 && colors.green < 100) { //Color is red
-                telemetry.addData("Color is", "red");
-            } else if(colors.blue > 150 && colors.red < 100 && colors.green < 100) { //Color is blue
-                telemetry.addData("Color is", "blue");
-            } else if(colors.green > 150 && colors.blue < 100 && colors.red < 100) { //Color is green
-                telemetry.addData("Color is", "green");
+/** Simplified color sensor code, works a lot better. **/
+            if(colors.red == colors.blue && colors.red == colors.green) { //Colors are the same
+                telemetry.addData("Colors are", "the same");
             }
+              else if (colors.red > colors.blue && colors.red > colors.green) { //Color is red
+                    telemetry.addData("Color is", "red");
+                } else if (colors.blue > colors.green && colors.blue > colors.red) { //Color is blue
+                    telemetry.addData("Color is", "blue");
+                } else if (colors.green > colors.blue && colors.green > colors.red) { //Color is green
+                    telemetry.addData("Color is", "green");
+                }
 
             /** We also display a conversion of the colors to an equivalent Android color integer.
              * @see Color */
