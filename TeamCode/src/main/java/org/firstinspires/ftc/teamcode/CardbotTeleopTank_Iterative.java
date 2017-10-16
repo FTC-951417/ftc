@@ -107,8 +107,8 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         setRight(rightPower);
         double rt = gamepad1.right_trigger;
         double lt = gamepad1.left_trigger;
-        robot.lift.setPower(rt);
-        robot.lift.setPower(-lt);
+        //robot.lift.setPower(rt);
+        //robot.lift.setPower(-lt);
         if(gamepad1.left_bumper) {
             // Reduce grip
             lgrip += 0.02;

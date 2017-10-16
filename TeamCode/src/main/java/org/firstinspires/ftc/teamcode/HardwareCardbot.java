@@ -27,6 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -41,6 +42,11 @@ public class HardwareCardbot
 
     public DcMotor  leftDrive   = null;
     public DcMotor  rightDrive  = null;
+
+    public DcMotor leftDrive2 = null;
+
+    public DcMotor rightDrive2 = null;
+
     public DcMotor  lift = null;
 
 
@@ -63,15 +69,20 @@ public class HardwareCardbot
 
         leftDrive  = hwMap.get(DcMotor.class, "ld"); // Left Drive
         rightDrive = hwMap.get(DcMotor.class, "rd"); // Right Drive
-        lift = hwMap.get(DcMotor.class, "lift");
+        leftDrive2 = hwMap.get(DcMotor.class, "ld2");
+        rightDrive2 = hwMap.get(DcMotor.class, "rd2");
+
         leftDrive.setDirection(Direction.REVERSE); // DEF: FORWARD
-        rightDrive.setDirection(Direction.REVERSE);// DEF: REVERSE
-        lift.setDirection(Direction.FORWARD);
+        rightDrive.setDirection(Direction.FORWARD);// DEF: REVERSE
+
+        leftDrive2.setDirection(Direction.REVERSE) ;
+        rightDrive2.setDirection(Direction.FORWARD);
+
 
         leftClaw = hwMap.get(Servo.class, "lc");
         rightClaw = hwMap.get(Servo.class, "rc");
-
-
+        //lift = hwMap.get(DcMotor.class, "lift");
+        //lift.setDirection(Direction.FORWARD);
         /*       * ROBOT OUTLINE *
          *      * Outlines Config *
          *   ld  <- :---------: -> rd
@@ -82,16 +93,16 @@ public class HardwareCardbot
          *
          */
 
-
+        leftDrive2.setPower(0);
         leftDrive.setPower(0);
         rightDrive.setPower(0);
-        lift.setPower(0);
+        //lift.setPower(0);
 
 
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+        //lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftDrive2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftClaw.setPosition(0);
         rightClaw.setPosition(1);
 
