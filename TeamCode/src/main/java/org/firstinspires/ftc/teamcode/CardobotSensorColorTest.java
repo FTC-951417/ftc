@@ -150,13 +150,14 @@ public class CardobotSensorColorTest extends LinearOpMode {
                     .addData("r", "%.3f", colors.red)
                     .addData("g", "%.3f", colors.green)
                     .addData("b", "%.3f", colors.blue);
-/** Simplified color sensor code, works a lot better. **/
-            if(colors.red == colors.blue && colors.red == colors.green) { //Colors are the same
-                telemetry.addData("Colors are", "the same");
+
+            /* Simplified color sensor code, works a lot better. */
+            if(colors.red == colors.blue && colors.red == colors.green && colors.blue == colors.green) { //Monochrome
+                telemetry.addData("Color is", "monochrome");
             }
-              else if (colors.red > colors.blue && colors.red > colors.green) { //Color is red
-                    telemetry.addData("Color is", "red");
-                } else if (colors.blue > colors.green && colors.blue > colors.red) { //Color is blue
+              else if (  colors.red > colors.blue && colors.red > colors.green) { //Color is red
+                metry.addData("Color is", "red");
+                } else i    telef (colors.blue > colors.green && colors.blue > colors.red) { //Color is blue
                     telemetry.addData("Color is", "blue");
                 } else if (colors.green > colors.blue && colors.green > colors.red) { //Color is green
                     telemetry.addData("Color is", "green");

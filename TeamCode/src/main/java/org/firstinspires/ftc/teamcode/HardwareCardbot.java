@@ -71,7 +71,6 @@ public class HardwareCardbot
         rightDrive2.setDirection(DcMotor.Direction.FORWARD);
         reverse(leftDrive);
         reverse(leftDrive2);
-        reverse(rightDrive2);
 
         leftClaw = hwMap.get(Servo.class, "lc");
         rightClaw = hwMap.get(Servo.class, "rc");
