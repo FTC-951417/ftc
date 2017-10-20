@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 
@@ -92,10 +93,12 @@ public class CardbotTeleopTank_Iterative extends OpMode {
     @Override
     public void loop() {
         double left;
-        double leftX;
+        double right;
 
-        if(gamepad1.y) {
+        if(gamepad1.y && !diagMode) {
             diagMode = true;
+        } else if(gamepad1.y && diagMode) {
+            diagMode = false;
         }
         if(gamepad1.dpad_up) {
             forwardDiagMode = true;
@@ -105,20 +108,13 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         }
 
         left = -gamepad1.left_stick_y;
-        leftX = gamepad1.left_stick_x;
-        double rightY = -gamepad1.right_stick_y;
-        double rightX = gamepad1.right_stick_x;
-        boolean rightNotInRange = isNotInRangeExcludes(rightY, -0.5, 0.5);
-        boolean rightXNotInRange = isNotInRangeExcludes(rightX, -0.5, 0.5);
+        right = -gamepad1.right_stick_y;
         if (!(gamepad1.dpad_down | gamepad1.dpad_up | gamepad1.dpad_left | gamepad1.dpad_right)) {
-            double leftPower = left;
-            double rightPower = rightY;
-            leftPower = Range.clip(leftPower, -1, 1);
-            rightPower = Range.clip(rightPower, -1, 1);
-            setLeft(leftPower);
-            setRight(rightPower);
-            telemetry.addData("lPower", leftPower);
-            telemetry.addData("rPower", rightPower);
+            left = Range.clip(left, -1, 1);
+            right = Range.clip(right, -1, 1);
+            setLeft(left);
+            setRight(right);
+
         } else {
             if(!diagMode) {
                 if (gamepad1.dpad_left)
@@ -133,23 +129,48 @@ public class CardbotTeleopTank_Iterative extends OpMode {
             }
         }
 
-        // Control servos with bumpers
+        // Control servos with bumpers (Gamepad 2)
 
-        if(gamepad1.left_bumper) {
+        if(gamepad2.left_trigger > 0.1) {
             // Reduce grip
             lgrip -= 0.02;
             rgrip += 0.02; // Right grip is reversed, 1 on right is 0 on left, etc.
         }
-        if(gamepad1.right_bumper){
+        if(gamepad2.right_trigger > 0.1){
             // Increase grip
             lgrip += 0.02;
             rgrip -= 0.02; // Right grip is reversed, 1 on right is 0 on left, etc.
         }
         lgrip = Range.clip(lgrip, 0, 0.32); // Stop arm from crushing itself
         rgrip = Range.clip(rgrip, 0.58, 1); // * ^   ^    ^     ^       ^
-        telemetry.addData("Grippage", "%" + String.valueOf(lgrip * 312.5));
         robot.leftClaw.setPosition(lgrip);
         robot.rightClaw.setPosition(rgrip);
+
+        // Arm Functions
+
+        double left2 = gamepad2.left_stick_y;
+        double right2 = gamepad2.right_stick_y;
+        robot.flipArm.setPower(left2);
+        robot.mainArm.setPower(right2);
+
+        // Free Motors / Lock Motors
+
+        if(gamepad2.b && robot.flipArm.getZeroPowerBehavior() == DcMotor.ZeroPowerBehavior.BRAKE){
+            robot.flipArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            robot.mainArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        } else if(gamepad2.b && robot.flipArm.getZeroPowerBehavior() == DcMotor.ZeroPowerBehavior.FLOAT) {
+            robot.flipArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            robot.mainArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
+
+        boolean isBraked = robot.flipArm.getZeroPowerBehavior() == DcMotor.ZeroPowerBehavior.BRAKE;
+
+        // Telemetry
+        telemetry.addData("Left Power", left);
+        telemetry.addData("Right Power", right);
+        telemetry.addData("Grip", "%" + String.valueOf(lgrip * 312.5));
+        telemetry.addData("Mode", diagMode ? "Diagonal" : "Strafe");
+        telemetry.addData("Arm Mode", isBraked ? "Brake" : "Free (WARNING! PLEASE RESET TO BRAKE WITH B on G2)");
         telemetry.update();
     }
 

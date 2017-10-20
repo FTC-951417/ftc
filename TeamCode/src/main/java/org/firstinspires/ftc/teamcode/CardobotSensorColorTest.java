@@ -154,14 +154,13 @@ public class CardobotSensorColorTest extends LinearOpMode {
             /* Simplified color sensor code, works a lot better. */
             if(colors.red == colors.blue && colors.red == colors.green && colors.blue == colors.green) { //Monochrome
                 telemetry.addData("Color is", "monochrome");
+            } else if (  colors.red > colors.blue && colors.red > colors.green) { //Color is red
+                telemetry.addData("Color is", "red");
+            } else if (colors.blue > colors.green && colors.blue > colors.red) { //Color is blue
+                telemetry.addData("Color is", "blue");
+            } else if (colors.green > colors.blue && colors.green > colors.red) { //Color is green
+                telemetry.addData("Color is", "green");
             }
-              else if (  colors.red > colors.blue && colors.red > colors.green) { //Color is red
-                metry.addData("Color is", "red");
-                } else i    telef (colors.blue > colors.green && colors.blue > colors.red) { //Color is blue
-                    telemetry.addData("Color is", "blue");
-                } else if (colors.green > colors.blue && colors.green > colors.red) { //Color is green
-                    telemetry.addData("Color is", "green");
-                }
 
             /** We also display a conversion of the colors to an equivalent Android color integer.
              * @see Color */

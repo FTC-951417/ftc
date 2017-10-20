@@ -44,6 +44,9 @@ public class HardwareCardbot
     public DcMotor  leftDrive2  = null;
     public DcMotor  rightDrive2 = null;
 
+    public DcMotor flipArm = null;
+    public DcMotor mainArm = null;
+
     public Servo leftClaw = null;
     public Servo rightClaw = null;
 
@@ -72,6 +75,11 @@ public class HardwareCardbot
         reverse(leftDrive);
         reverse(leftDrive2);
 
+        flipArm = hwMap.get(DcMotor.class, "bigarm");
+        mainArm = hwMap.get(DcMotor.class, "smallarm");
+        flipArm.setDirection(Direction.FORWARD);
+        mainArm.setDirection(Direction.FORWARD);
+
         leftClaw = hwMap.get(Servo.class, "lc");
         rightClaw = hwMap.get(Servo.class, "rc");
 
@@ -92,16 +100,22 @@ public class HardwareCardbot
         leftDrive2.setPower(0);
         rightDrive2.setPower(0);
 
-
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftDrive2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        flipArm.setPower(0);
+        mainArm.setPower(0);
+
+        flipArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        mainArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        flipArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mainArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         leftClaw.setPosition(0);
         rightClaw.setPosition(1);
-
-
     }
 
 
