@@ -141,8 +141,10 @@ public class CardbotTeleopTank_Iterative extends OpMode {
             lgrip += 0.02;
             rgrip -= 0.02; // Right grip is reversed, 1 on right is 0 on left, etc.
         }
-        lgrip = Range.clip(lgrip, 0, 0.32); // Stop arm from crushing itself
-        rgrip = Range.clip(rgrip, 0.58, 1); // * ^   ^    ^     ^       ^
+        rgrip = Range.clip(rgrip, 0, 0.32); // Stop arm from crushing itself
+        lgrip = Range.clip(lgrip, 0.58, 1); // * ^   ^    ^     ^       ^
+        rgrip = Range.clip(rgrip, 0.1, 1); // Stop arm from crushing itself
+        lgrip = Range.clip(lgrip, 0.1, 1); // * ^   ^    ^     ^       ^
         robot.leftClaw.setPosition(lgrip);
         robot.rightClaw.setPosition(rgrip);
 
@@ -192,33 +194,36 @@ public class CardbotTeleopTank_Iterative extends OpMode {
        ld + ld2  = Strafe right */
 
     private void diagLeft(boolean positive) {
-        int pwr = positive ? 1 : -1;
+        double pwr = positive ? 0.5 : -0.5;
         robot.rightDrive.setPower(pwr);
         robot.leftDrive2.setPower(pwr);
         telemetry.addData("Turn Power", pwr);
         // Opposites
         robot.rightDrive2.setPower(-pwr);
         robot.leftDrive.setPower(-pwr);
+        telemetry.update();
     }
 
     private void diagRight(boolean positive) {
-        int pwr = positive ? 1 : -1; // TODO: Move reverse types to opposites because reverse right is actually reverse left.
+        double pwr = positive ? 0.5 : -0.5; // TODO: Move reverse types to opposites because reverse right is actually reverse left.
         robot.leftDrive.setPower(pwr);
         robot.rightDrive2.setPower(pwr);
         telemetry.addData("Diag Power", pwr);
         // Opposites
         robot.rightDrive.setPower(-pwr);
         robot.leftDrive2.setPower(-pwr);
+        telemetry.update();
     }
 
     private void strafe(boolean goRight) {
-        int pwr = goRight ? 1 : -1;
+        double pwr = goRight ? 0.5 : -0.5;
         robot.leftDrive.setPower(pwr);
         robot.leftDrive2.setPower(-pwr);
         telemetry.addData("Strafe Power", pwr);
         // Opposites
         robot.rightDrive.setPower(-pwr);
         robot.rightDrive2.setPower(pwr);
+        telemetry.update();
     }
 
     /* Range functions */
