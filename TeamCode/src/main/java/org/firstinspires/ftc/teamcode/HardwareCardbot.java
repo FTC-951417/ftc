@@ -77,8 +77,8 @@ public class HardwareCardbot
 
         flipArm = hwMap.get(DcMotor.class, "bigarm");
         mainArm = hwMap.get(DcMotor.class, "smallarm");
-        flipArm.setDirection(Direction.FORWARD);
-        mainArm.setDirection(Direction.FORWARD);
+        flipArm.setDirection(Direction.REVERSE);
+        mainArm.setDirection(Direction.REVERSE);
 
         leftClaw = hwMap.get(Servo.class, "lc");
         rightClaw = hwMap.get(Servo.class, "rc");
