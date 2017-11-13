@@ -29,9 +29,11 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
@@ -49,9 +51,13 @@ public class HardwareCardbot
 
     public Servo leftClaw = null;
     public Servo rightClaw = null;
+    public Servo sensorArm = null;
 
+    public Servo phoneArm = null;
 
+    public Servo swatter = null;
 
+    public NormalizedColorSensor cs = null;
 
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
@@ -62,6 +68,11 @@ public class HardwareCardbot
     public void init(HardwareMap ahwMap) {
 
         hwMap = ahwMap;
+
+        cs = hwMap.get(NormalizedColorSensor.class, "cs");
+        sensorArm = hwMap.get(Servo.class, "servoarm");
+        phoneArm = hwMap.get(Servo.class, "phoneaxis");
+        swatter = hwMap.get(Servo.class, "swatter");
 
 
         leftDrive  = hwMap.get(DcMotor.class, "ld"); // Left Drive
@@ -116,10 +127,15 @@ public class HardwareCardbot
 
         leftClaw.setPosition(0.1);
         rightClaw.setPosition(0.1);
+
+        sensorArm.setPosition(0);
+        phoneArm.setPosition(0.5);
+
+        swatter.setPosition(0.5);
     }
 
 
-    public void reverse(DcMotor motorIn) {
+    public static void reverse(DcMotor motorIn) {
         Direction motorCurDir = motorIn.getDirection();
         if(motorCurDir == Direction.FORWARD) {
             motorIn.setDirection(Direction.REVERSE);

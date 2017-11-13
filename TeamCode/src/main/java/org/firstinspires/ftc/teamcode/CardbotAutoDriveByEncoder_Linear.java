@@ -29,13 +29,25 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
+import com.qualcomm.robotcore.hardware.SwitchableLight;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -64,7 +76,6 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="AutoTest", group="Cardbot")
 public class CardbotAutoDriveByEncoder_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -78,6 +89,24 @@ public class CardbotAutoDriveByEncoder_Linear extends LinearOpMode {
                                                       (WHEEL_DIAMETER_INCHES * Math.PI);
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
+    public NormalizedRGBA colors;
+    public Alliance alliance;
+
+
+    public static final String TAG = "Vuforia VuMark Cardbot";
+
+    OpenGLMatrix lastLocation = null;
+
+    /**
+     * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
+     * localization engine.
+     */
+    VuforiaLocalizer vuforia;
+
+
+    public CardbotAutoDriveByEncoder_Linear(String allianceColor){
+        alliance.color = allianceColor;
+    }
 
     @Override
     public void runOpMode() {
@@ -110,10 +139,113 @@ public class CardbotAutoDriveByEncoder_Linear extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+        robot.leftClaw.setPosition (1);
+        robot.rightClaw.setPosition (0.32);
+        robot.phoneArm.setPosition (0.5);
+        robot.sensorArm.setPosition(1);
+        /*
+        int i = 0;
+        while(colors.red <= 0.5 || colors.blue <= 0.5) {
+            i++;
+            try {
+                getColor();
+            } catch(InterruptedException e) {
+                e.printStackTrace();
+            }
+            if(i == 1000) {
+                encoderStrafe(0.3, 1.5, 1.5, 5, false);
+            }
+        }
+        if(colors.red > colors.blue) {
+            robot.sensorArm.setPosition(1);
+            if(alliance.color == "blue") { // Turn Left
+                robot.swatter.setPosition(0);
+            } else { // Turn Right
+                robot.swatter.setPosition(1);
+            }
+            robot.sensorArm.setPosition(0);
+        }
+        if(colors.blue > colors.red) {
+            robot.sensorArm.setPosition(1); robot.sensorArm.setPosition(1);
+            if(alliance.color == "red") { // Turn Left
+                robot.swatter.setPosition(0);
+            } else { // Turn Right
+                robot.swatter.setPosition(1);
+            }
+            robot.sensorArm.setPosition(0);
+        }
+        */
+        robot.sensorArm.setPosition(1);
+
+        if(alliance.color == "red") { // Swat Left
+           robot.swatter.setPosition(0);
+        }
+
+        robot.sensorArm.setPosition(0);
+        robot.phoneArm.setPosition(0);
+        robot.swatter.setPosition(0.5);
+
+
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+
+        // OR...  Do Not Activate the Camera Monitor View, to save power
+        // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        /*
+         * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
+         * web site at https://developer.vuforia.com/license-manager.
+         */
+        parameters.vuforiaLicenseKey = "AbN5bVn/////AAAAGYB9Mi8Lq0aOlHLXV+cCXXCCaDrZfFL4Mc9vNmpdEhix11+l5w6Kx7KEp5NIY43aTY1m0c454n9rAqxX5i5Kn0xHj0qq6jFjABBYaWQR+S0eagZoICVhfmHEhrFb4udp84Yqaj6Lgrkj5AwqO7pd3rfqOe39vAo1XY4w5KAADo0anBPFGPElHNlnhQ5HQOrbULoeMgOd+mm1SWHGsI+FafcuEj/hGn+AhxueQQ97+/+nEEmEsdNJzHSK9vQ0M6QeyhKR4imAN9AG87e3HgHYD1bM4E340H5T5Tio7BeSO9jhPat++RRbD1TqM5H994zSGyl7FpO3Gvl8s+SY5DXhML06IYnCKPvMNxK+/VLE3Yvy";
+
+
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary;
+
+        relicTrackables.activate();
+        boolean end = false;
+        boolean increment = true;
+
+        RelicRecoveryVuMark vuMarkAnswer;
+        double posToSet = 0.5;
+        int i = -1;
+        while (opModeIsActive() && !(end)) {
+            i++;
+            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+                vuMarkAnswer = vuMark;
+                telemetry.addData("VuMark", "%s visible", vuMark);
+                end = true;
+            } else {
+                telemetry.addData("VuMark", "not visible");
+            }
+            boolean lessThan1 = robot.phoneArm.getPosition() < 1;
+            boolean greaterThan0 = robot.phoneArm.getPosition() > 0;
+            if (i % 500 == 0) {
+
+                if (increment && lessThan1) {
+
+                } else if (!increment && greaterThan0) {
+
+                } else {
+                    increment = true;
+                    robot.phoneArm.setPosition(0);
+                }
+                robot.phoneArm.setPosition(posToSet);
+            }
+
+            telemetry.update();
+        }
+        robot.phoneArm.setPosition(0.5);
+
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 48 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  -24,  -24, 5.0);  // S1: Forward 48 Inches with 5 Sec timeout
         //encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
         //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
@@ -277,4 +409,124 @@ public class CardbotAutoDriveByEncoder_Linear extends LinearOpMode {
             //  sleep(250);   // optional pause after each move
         }
     }
+
+
+    private void getColor() throws InterruptedException {
+
+        // values is a reference to the hsvValues array.
+        float[] hsvValues = new float[3];
+        final float values[] = hsvValues;
+
+
+        // If possible, turn the light on in the beginning (it might already be on anyway,
+        // we just make sure it is if we can).
+        if (robot.cs instanceof SwitchableLight) {
+            ((SwitchableLight) robot.cs).enableLight(true);
+        }
+
+
+        // Read the sensor
+        colors = robot.cs.getNormalizedColors();
+
+
+        Color.colorToHSV(colors.toColor(), hsvValues);
+        telemetry.addLine()
+                .addData("H", "%.3f", hsvValues[0])
+                .addData("S", "%.3f", hsvValues[1])
+                .addData("V", "%.3f", hsvValues[2]);
+        telemetry.addLine()
+                .addData("a", "%.3f", colors.alpha)
+                .addData("r", "%.3f", colors.red)
+                .addData("g", "%.3f", colors.green)
+                .addData("b", "%.3f", colors.blue);
+
+        /* Simplified color sensor code, works a lot better. */
+        if (colors.red == colors.blue && colors.red == colors.green && colors.blue == colors.green) { //Monochrome
+            telemetry.addData("Color is", "monochrome");
+        } else if (colors.red > colors.blue && colors.red > colors.green) { //Color is red
+            telemetry.addData("Color is", "red");
+        } else if (colors.blue > colors.green && colors.blue > colors.red) { //Color is blue
+            telemetry.addData("Color is", "blue");
+        } else if (colors.green > colors.blue && colors.green > colors.red) { //Color is green
+            telemetry.addData("Color is", "green");
+        }
+
+
+        int color = colors.toColor();
+        telemetry.addLine("raw Android color: ").addData("a", "%02x", Color.alpha(color)).addData("r", "%02x", Color.red(color)).addData("g", "%02x", Color.green(color)).addData("b", "%02x", Color.blue(color));
+        // Balance the colors. The values returned by getColors() are normalized relative to the
+        // maximum possible values that the sensor can measure. For example, a sensor might in a
+        // particular configuration be able to internally measure color intensity in a range of
+        // [0, 10240]. In such a case, the values returned by getColors() will be divided by 10240
+        // so as to return a value it the range [0,1]. However, and this is the point, even so, the
+        // values we see here may not get close to 1.0 in, e.g., low light conditions where the
+        // sensor measurements don't approach their maximum limit. In such situations, the *relative*
+        // intensities of the colors are likely what is most interesting. Here, for example, we boost
+        // the signal on the colors while maintaining their relative balance so as to give more
+        // vibrant visual feedback on the robot controller visual display.
+        float max = Math.max(Math.max(Math.max(colors.red, colors.green), colors.blue), colors.alpha);
+        colors.red /= max;
+        colors.green /= max;
+        colors.blue /= max;
+        color = colors.toColor();
+        telemetry.addLine("normalized color:  ").addData("a", "%02x", Color.alpha(color)).addData("r", "%02x", Color.red(color)).addData("g", "%02x", Color.green(color)).addData("b", "%02x", Color.blue(color));
+        telemetry.update();
+
+        // convert the RGB values to HSV values.
+        Color.RGBToHSV(Color.red(color), Color.green(color), Color.blue(color), hsvValues);
+
+
+    }
+
+    private void setLeft(double power){
+        robot.leftDrive.setPower(power);
+        robot.leftDrive2.setPower(power);
+    }
+
+    private void setRight(double power){
+        robot.rightDrive.setPower(power);
+        robot.rightDrive2.setPower(power);
+    }
+
+    /* Start mecanum functions */
+    /*  Remember to do the opposites of each set of motor in reverse!
+       rd + ld2 = Diag left
+       ld + rd2  = Diag right
+       rd + rd2  = Strafe left
+       ld + ld2  = Strafe right */
+
+    private void diagLeft(boolean positive) {
+        double pwr = positive ? 0.5 : -0.5;
+        robot.rightDrive.setPower(pwr);
+        robot.leftDrive2.setPower(pwr);
+        telemetry.addData("Turn Power", pwr);
+        // Opposites
+        robot.rightDrive2.setPower(-pwr);
+        robot.leftDrive.setPower(-pwr);
+        telemetry.update();
+    }
+
+    private void diagRight(boolean positive) {
+        double pwr = positive ? 0.5 : -0.5; // TODO: Move reverse types to opposites because reverse right is actually reverse left.
+        robot.leftDrive.setPower(pwr);
+        robot.rightDrive2.setPower(pwr);
+        telemetry.addData("Diag Power", pwr);
+        // Opposites
+        robot.rightDrive.setPower(-pwr);
+        robot.leftDrive2.setPower(-pwr);
+        telemetry.update();
+    }
+
+    private void strafe(boolean goRight) {
+        double pwr = goRight ? 0.5 : -0.5;
+        robot.leftDrive.setPower(pwr);
+        robot.leftDrive2.setPower(-pwr);
+        telemetry.addData("Strafe Power", pwr);
+        // Opposites
+        robot.rightDrive.setPower(-pwr);
+        robot.rightDrive2.setPower(pwr);
+        telemetry.update();
+    }
 }
+
+

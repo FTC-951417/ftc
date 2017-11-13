@@ -67,5 +67,7 @@ public class FtcOpModeRegister implements OpModeRegister {
          * Any manual OpMode class registrations should go here.
          */
         //manager.register("TeleOp1", CardbotTeleopTank_Iterative.class);
+        manager.register("Auto Red", new CardbotAutoDriveByEncoder_Linear("red"));
+        manager.register("Auto Blue", new CardbotAutoDriveByEncoder_Linear("blue"));
     }
 }

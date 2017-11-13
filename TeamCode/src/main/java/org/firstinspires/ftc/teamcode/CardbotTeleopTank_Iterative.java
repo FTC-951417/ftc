@@ -94,16 +94,18 @@ public class CardbotTeleopTank_Iterative extends OpMode {
     public void loop() {
         double left;
         double right;
+        robot.sensorArm.setPosition(1);
+        robot.phoneArm.setPosition(0);
 
-        if(gamepad1.y && !diagMode) {
+        if (gamepad1.y && !diagMode) {
             diagMode = true;
-        } else if(gamepad1.y && diagMode) {
+        } else if (gamepad1.y && diagMode) {
             diagMode = false;
         }
-        if(gamepad1.dpad_up) {
+        if (gamepad1.dpad_up) {
             forwardDiagMode = true;
         }
-        if(gamepad1.dpad_down) {
+        if (gamepad1.dpad_down) {
             forwardDiagMode = false;
         }
 
@@ -116,7 +118,7 @@ public class CardbotTeleopTank_Iterative extends OpMode {
             setRight(right);
 
         } else {
-            if(!diagMode) {
+            if (!diagMode) {
                 if (gamepad1.dpad_left)
                     strafe(false);
                 if (gamepad1.dpad_right)
@@ -131,12 +133,12 @@ public class CardbotTeleopTank_Iterative extends OpMode {
 
         // Control servos with bumpers (Gamepad 2)
 
-        if(gamepad2.left_trigger > 0.1) {
+        if (gamepad2.left_trigger > 0.1) {
             // Reduce grip
             lgrip -= 0.02;
             rgrip += 0.02; // Right grip is reversed, 1 on right is 0 on left, etc.
         }
-        if(gamepad2.right_trigger > 0.1){
+        if (gamepad2.right_trigger > 0.1) {
             // Increase grip
             lgrip += 0.02;
             rgrip -= 0.02; // Right grip is reversed, 1 on right is 0 on left, etc.
@@ -157,10 +159,10 @@ public class CardbotTeleopTank_Iterative extends OpMode {
 
         // Free Motors / Lock Motors
 
-        if(gamepad2.b && robot.flipArm.getZeroPowerBehavior() == DcMotor.ZeroPowerBehavior.BRAKE){
+        if (gamepad2.b && robot.flipArm.getZeroPowerBehavior() == DcMotor.ZeroPowerBehavior.BRAKE) {
             robot.flipArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             robot.mainArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        } else if(gamepad2.b && robot.flipArm.getZeroPowerBehavior() == DcMotor.ZeroPowerBehavior.FLOAT) {
+        } else if (gamepad2.b && robot.flipArm.getZeroPowerBehavior() == DcMotor.ZeroPowerBehavior.FLOAT) {
             robot.flipArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             robot.mainArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
@@ -175,6 +177,8 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         telemetry.addData("Arm Mode", isBraked ? "Brake" : "Free (WARNING! PLEASE RESET TO BRAKE WITH B on G2)");
         telemetry.update();
     }
+
+
 
     private void setLeft(double power){
         robot.leftDrive.setPower(power);
@@ -192,6 +196,8 @@ public class CardbotTeleopTank_Iterative extends OpMode {
        ld + rd2  = Diag right
        rd + rd2  = Strafe left
        ld + ld2  = Strafe right */
+
+    /**50% Speed buttonZ**/
 
     private void diagLeft(boolean positive) {
         double pwr = positive ? 0.5 : -0.5;
