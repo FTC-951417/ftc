@@ -112,11 +112,15 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         left = -gamepad1.left_stick_y;
         right = -gamepad1.right_stick_y;
         if (!(gamepad1.dpad_down | gamepad1.dpad_up | gamepad1.dpad_left | gamepad1.dpad_right)) {
-            left = Range.clip(left, -1, 1);
-            right = Range.clip(right, -1, 1);
+            if(gamepad1.left_stick_button) {
+                left = Range.clip(left, -1, 1);
+                right = Range.clip(right, -1, 1);
+            } else {
+                left = Range.clip(left, -0.5, 0.5);
+                right = Range.clip(right, -0.5, 0.5);
+            }
             setLeft(left);
             setRight(right);
-
         } else {
             if (!diagMode) {
                 if (gamepad1.dpad_left)
