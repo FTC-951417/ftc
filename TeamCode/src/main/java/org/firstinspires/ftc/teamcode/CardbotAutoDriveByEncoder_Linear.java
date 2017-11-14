@@ -49,6 +49,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
+import static org.firstinspires.ftc.teamcode.HardwareCardbot.robot;
+
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
  * It uses the common Pushbot hardware class to define the drive on the robot.
@@ -79,7 +81,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 public class CardbotAutoDriveByEncoder_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwareCardbot         robot   = new HardwareCardbot();   // Use a Pushbot's hardware
+    //HardwareCardbot         robot   = new HardwareCardbot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
@@ -159,18 +161,34 @@ public class CardbotAutoDriveByEncoder_Linear extends LinearOpMode {
         if(colors.red > colors.blue) {
             robot.sensorArm.setPosition(1);
             if(alliance.color == "blue") { // Turn Left
-                robot.swatter.setPosition(0);
+                HardwareCardbot.reverse(rightDrive);
+                HardwareCardbot.reverse(rightDrive2);
+                encoderDrive(1, 3, 3, 5.0);
+                HardwareCardbot.reverse(rightDrive);
+                HardwareCardbot.reverse(rightDrive2);
             } else { // Turn Right
-                robot.swatter.setPosition(1);
+                HardwareCardbot.reverse(leftDrive);
+                HardwareCardbot.reverse(leftDrive2);
+                encoderDrive(1, 3, 3, 5.0);
+                HardwareCardbot.reverse(leftDrive);
+                HardwareCardbot.reverse(leftDrive2);
             }
             robot.sensorArm.setPosition(0);
         }
         if(colors.blue > colors.red) {
             robot.sensorArm.setPosition(1); robot.sensorArm.setPosition(1);
             if(alliance.color == "red") { // Turn Left
-                robot.swatter.setPosition(0);
+                HardwareCardbot.reverse(rightDrive);
+                HardwareCardbot.reverse(rightDrive2);
+                encoderDrive(1, 3, 3, 5.0);
+                HardwareCardbot.reverse(rightDrive);
+                HardwareCardbot.reverse(rightDrive2);
             } else { // Turn Right
-                robot.swatter.setPosition(1);
+                HardwareCardbot.reverse(leftDrive);
+                HardwareCardbot.reverse(leftDrive2);
+                encoderDrive(1, 3, 3, 5.0);
+                HardwareCardbot.reverse(leftDrive);
+                HardwareCardbot.reverse(leftDrive2);
             }
             robot.sensorArm.setPosition(0);
         }
@@ -178,10 +196,18 @@ public class CardbotAutoDriveByEncoder_Linear extends LinearOpMode {
         robot.sensorArm.setPosition(1);
 
         if(alliance.color == "red") { // Swat Left
+            HardwareCardbot.reverse(robot.rightDrive);
+            HardwareCardbot.reverse(robot.rightDrive2);
+            encoderDrive(1, 3, 3, 5.0);
+            HardwareCardbot.reverse(robot.rightDrive);
+            HardwareCardbot.reverse(robot.rightDrive2);
 
-           robot.swatter.setPosition(0);
+            HardwareCardbot.reverse(robot.leftDrive);
+            HardwareCardbot.reverse(robot.leftDrive2);
+            encoderDrive(1, 3, 3, 5.0);
+            HardwareCardbot.reverse(robot.leftDrive);
+            HardwareCardbot.reverse(robot.leftDrive2);
         }
-
         robot.sensorArm.setPosition(0);
         robot.phoneArm.setPosition(0.5);
 
@@ -228,14 +254,16 @@ public class CardbotAutoDriveByEncoder_Linear extends LinearOpMode {
             boolean lessThan1 = robot.phoneArm.getPosition() < 1;
             boolean greaterThan0 = robot.phoneArm.getPosition() > 0;
             if (i % 500 == 0) {
-
-                if (increment && lessThan1) {
-
-                } else if (!increment && greaterThan0) {
-
-                } else {
+                if(robot.phoneArm.getPosition() >= 1) {
+                    increment = false;
+                }
+                if(robot.phoneArm.getPosition() <= 0) {
                     increment = true;
-                    robot.phoneArm.setPosition(0);
+                }
+                if (increment) {
+                    posToSet += 0.1;
+                } else {
+                    posToSet -= 0.1;
                 }
                 robot.phoneArm.setPosition(posToSet);
             }

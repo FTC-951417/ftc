@@ -116,8 +116,8 @@ public class CardbotTeleopTank_Iterative extends OpMode {
                 left = Range.clip(left, -1, 1);
                 right = Range.clip(right, -1, 1);
             } else {
-                left = Range.clip(left, -0.5, 0.5);
-                right = Range.clip(right, -0.5, 0.5);
+                left = Range.clip(left, -0.32, 0.32);
+                right = Range.clip(right, -0.32, 0.32);
             }
             setLeft(left);
             setRight(right);
