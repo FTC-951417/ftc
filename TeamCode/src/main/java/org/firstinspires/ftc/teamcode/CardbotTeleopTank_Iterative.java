@@ -147,8 +147,9 @@ public class CardbotTeleopTank_Iterative extends OpMode {
             lgrip += 0.02;
             rgrip -= 0.02; // Right grip is reversed, 1 on right is 0 on left, etc.
         }
-        rgrip = Range.clip(rgrip, 0, 0.32); // Stop arm from crushing itself
-        lgrip = Range.clip(lgrip, 0.58, 1); // * ^   ^    ^     ^       ^
+        double distanceFromMid = 0.05;
+        rgrip = Range.clip(rgrip, 0, 0.5 - distanceFromMid); // Stop arm from crushing itself
+        lgrip = Range.clip(lgrip, 0.5 + distanceFromMid, 1); // * ^   ^    ^     ^       ^
         rgrip = Range.clip(rgrip, 0.1, 1); // Stop arm from crushing itself
         lgrip = Range.clip(lgrip, 0.1, 1); // * ^   ^    ^     ^       ^
         robot.leftClaw.setPosition(lgrip);
@@ -162,7 +163,7 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         robot.mainArm.setPower(right2);
 
         // Free Motors / Lock Motors
-
+        /*
         if (gamepad2.b && robot.flipArm.getZeroPowerBehavior() == DcMotor.ZeroPowerBehavior.BRAKE) {
             robot.flipArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             robot.mainArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -170,15 +171,16 @@ public class CardbotTeleopTank_Iterative extends OpMode {
             robot.flipArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             robot.mainArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
+        */
 
-        boolean isBraked = robot.flipArm.getZeroPowerBehavior() == DcMotor.ZeroPowerBehavior.BRAKE;
+        //boolean isBraked = robot.flipArm.getZeroPowerBehavior() == DcMotor.ZeroPowerBehavior.BRAKE;
 
         // Telemetry
         telemetry.addData("Left Power", left);
         telemetry.addData("Right Power", right);
         telemetry.addData("Grip", "%" + String.valueOf(lgrip * 312.5));
         telemetry.addData("Mode", diagMode ? "Diagonal" : "Strafe");
-        telemetry.addData("Arm Mode", isBraked ? "Brake" : "Free (WARNING! PLEASE RESET TO BRAKE WITH B on G2)");
+        //telemetry.addData("Arm Mode", isBraked ? "Brake" : "Free (WARNING! PLEASE RESET TO BRAKE WITH B on G2)");
         telemetry.update();
     }
 

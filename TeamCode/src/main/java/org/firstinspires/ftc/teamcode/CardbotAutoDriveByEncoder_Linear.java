@@ -112,7 +112,7 @@ public class CardbotAutoDriveByEncoder_Linear extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-
+        alliance.color = "red";
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
