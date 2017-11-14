@@ -33,15 +33,19 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
+import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptNullOp;
+import org.firstinspires.ftc.teamcode.CardbotAutoDriveByEncoder_Linear;
+import org.firstinspires.ftc.teamcode.CardbotTeleopTank_Iterative;
 
 /**
  * {@link FtcOpModeRegister} is responsible for registering opmodes for use in an FTC game.
  * @see #register(OpModeManager)
  */
-public class FtcOpModeRegister implements OpModeRegister {
 
+public class FtcOpModeRegister implements OpModeRegister {
+    @OpModeRegistrar
     /**
      * {@link #register(OpModeManager)} is called by the SDK game in order to register
      * OpMode classes or instances that will participate in an FTC game.
@@ -61,9 +65,10 @@ public class FtcOpModeRegister implements OpModeRegister {
      * @see com.qualcomm.robotcore.eventloop.opmode.TeleOp
      * @see com.qualcomm.robotcore.eventloop.opmode.Autonomous
      */
+
     public void register(OpModeManager manager) {
 
-        /**
+        /*
          * Any manual OpMode class registrations should go here.
          */
         //manager.register("TeleOp1", CardbotTeleopTank_Iterative.class);

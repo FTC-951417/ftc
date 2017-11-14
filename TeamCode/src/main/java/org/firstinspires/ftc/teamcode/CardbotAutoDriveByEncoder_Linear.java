@@ -178,12 +178,14 @@ public class CardbotAutoDriveByEncoder_Linear extends LinearOpMode {
         robot.sensorArm.setPosition(1);
 
         if(alliance.color == "red") { // Swat Left
+
            robot.swatter.setPosition(0);
         }
 
         robot.sensorArm.setPosition(0);
-        robot.phoneArm.setPosition(0);
-        robot.swatter.setPosition(0.5);
+        robot.phoneArm.setPosition(0.5);
+
+        encoderDrive(0.3,3, 3, 5 );
 
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -213,7 +215,7 @@ public class CardbotAutoDriveByEncoder_Linear extends LinearOpMode {
         RelicRecoveryVuMark vuMarkAnswer;
         double posToSet = 0.5;
         int i = -1;
-        while (opModeIsActive() && !(end)) {
+        while (!(end) && opModeIsActive()) {
             i++;
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
