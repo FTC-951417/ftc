@@ -94,8 +94,7 @@ public class CardbotTeleopTank_Iterative extends OpMode {
     public void loop() {
         double left;
         double right;
-        robot.sensorArm.setPosition(1);
-        robot.phoneArm.setPosition(0);
+        robot.sensorArm.setPosition(0);
 
         if (gamepad1.y && !diagMode) {
             diagMode = true;

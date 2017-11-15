@@ -89,7 +89,7 @@ public class CardbotAutoRedRight extends LinearOpMode {
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-                                                      (WHEEL_DIAMETER_INCHES * Math.PI);
+            (WHEEL_DIAMETER_INCHES * Math.PI);
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
     public NormalizedRGBA colors;
@@ -132,66 +132,88 @@ public class CardbotAutoRedRight extends LinearOpMode {
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
-                          robot.leftDrive.getCurrentPosition(),
-                          robot.rightDrive.getCurrentPosition());
+                robot.leftDrive.getCurrentPosition(),
+                robot.rightDrive.getCurrentPosition());
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        robot.leftClaw.setPosition (1);
+        robot.leftClaw.setPosition (0.55);
         robot.rightClaw.setPosition (0.45);
-        robot.phoneArm.setPosition (0.5);
+
+
+
+
+
+
+
+
         robot.sensorArm.setPosition(1);
+        sleep(1500); // Wait for arm to move!
+        //robot.sensorArm.setPosition(0);
+
         boolean turnedLeft = true;
-        while(colors.red <= 0.5 || colors.blue <= 0.5) {
+        while(colors == null && opModeIsActive()){
             try {
                 getColor();
             } catch(InterruptedException e) {
                 e.printStackTrace();
             }
         }
+
+        while(colors.red <= 0.005 || colors.blue <= 0.005 && opModeIsActive()) {
+            try {
+                getColor();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        sleep(500);
+
         if(colors.red > colors.blue) {
             robot.sensorArm.setPosition(1);
             { // Turn Right
-                HardwareCardbot.reverse(robot.leftDrive);
-                HardwareCardbot.reverse(robot.leftDrive2);
-                encoderDrive(1, 3, 3, 5.0);
-                HardwareCardbot.reverse(robot.leftDrive);
-                HardwareCardbot.reverse(robot.leftDrive2);
+                HardwareCardbot.reverse(robot.rightDrive);
+                HardwareCardbot.reverse(robot.rightDrive2);
+                encoderDrive(0.2, 3, 3, 5.0);
+                HardwareCardbot.reverse(robot.rightDrive);
+                HardwareCardbot.reverse(robot.rightDrive2);
             }
             robot.sensorArm.setPosition(0);
             turnedLeft = false;
         }
         if(colors.blue > colors.red) {
             robot.sensorArm.setPosition(1);
-            if(alliance.color == "red") { // Turn Left
-                HardwareCardbot.reverse(robot.rightDrive);
-                HardwareCardbot.reverse(robot.rightDrive2);
-                encoderDrive(1, 3, 3, 5.0);
-                HardwareCardbot.reverse(robot.rightDrive);
-                HardwareCardbot.reverse(robot.rightDrive2);
+            { // Turn Left
+            HardwareCardbot.reverse(robot.leftDrive);
+            HardwareCardbot.reverse(robot.leftDrive2);
+            encoderDrive(0.2, 3, 3, 5.0);
+            HardwareCardbot.reverse(robot.leftDrive);
+            HardwareCardbot.reverse(robot.leftDrive2);
             }
             robot.sensorArm.setPosition(0);
             turnedLeft = true;
         }
 
         if(turnedLeft) { // Turn Right
-            HardwareCardbot.reverse(robot.leftDrive);
-            HardwareCardbot.reverse(robot.leftDrive2);
-            encoderDrive(1, 3, 3, 5.0);
-            HardwareCardbot.reverse(robot.leftDrive);
-            HardwareCardbot.reverse(robot.leftDrive2);
+            HardwareCardbot.reverse(robot.rightDrive);
+            HardwareCardbot.reverse(robot.rightDrive2);
+            encoderDrive(0.2, 3, 3, 5.0);
+            HardwareCardbot.reverse(robot.rightDrive);
+            HardwareCardbot.reverse(robot.rightDrive2);
         } else { // Turn Left
-            HardwareCardbot.reverse(robot.rightDrive);
-            HardwareCardbot.reverse(robot.rightDrive2);
-            encoderDrive(1, 3, 3, 5.0);
-            HardwareCardbot.reverse(robot.rightDrive);
-            HardwareCardbot.reverse(robot.rightDrive2);
+            HardwareCardbot.reverse(robot.leftDrive);
+            HardwareCardbot.reverse(robot.leftDrive2);
+            encoderDrive(0.2, 3, 3, 5.0);
+            HardwareCardbot.reverse(robot.leftDrive);
+            HardwareCardbot.reverse(robot.leftDrive2);
         }
 
-        robot.phoneArm.setPosition(0.5);
 
-        encoderDrive(0.3,3, 3, 5 );
+
+        encoderDrive(0.3, 10, 5);
+
 
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -219,7 +241,6 @@ public class CardbotAutoRedRight extends LinearOpMode {
         boolean increment = true;
 
         RelicRecoveryVuMark vuMarkAnswer = null;
-        double posToSet = 0.5;
         int i = -1;
         while (!(end) && opModeIsActive()) {
             i++;
@@ -231,35 +252,34 @@ public class CardbotAutoRedRight extends LinearOpMode {
             } else {
                 telemetry.addData("VuMark", "not visible");
             }
-            boolean lessThan1 = robot.phoneArm.getPosition() < 1;
-            boolean greaterThan0 = robot.phoneArm.getPosition() > 0;
-            if (i % 500 == 0) {
-                if(robot.phoneArm.getPosition() >= 1) {
-                    increment = false;
-                }
-                if(robot.phoneArm.getPosition() <= 0) {
-                    increment = true;
-                }
-                if (increment) {
-                    posToSet += 0.1;
-                } else {
-                    posToSet -= 0.1;
-                }
-                robot.phoneArm.setPosition(posToSet);
-            }
 
             telemetry.update();
         }
-        robot.phoneArm.setPosition(0.5);
 
+        telemetry.addData("VuMark:", vuMarkAnswer);
         if(vuMarkAnswer == null || vuMarkAnswer == RelicRecoveryVuMark.UNKNOWN) {
             requestOpModeStop();
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.CENTER) {
+            //Turn Left 6 inches
 
+            HardwareCardbot.reverse(robot.leftDrive);
+            HardwareCardbot.reverse(robot.leftDrive2);
+            encoderDrive(1, 6, 5.0);
+            HardwareCardbot.reverse(robot.leftDrive);
+            HardwareCardbot.reverse(robot.leftDrive2);
+
+            encoderDrive(0.5,14,14,5.0);
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.LEFT) {
+            //Turn Left 9 inches
 
+            HardwareCardbot.reverse(robot.leftDrive);
+            HardwareCardbot.reverse(robot.leftDrive2);
+            encoderDrive(1, 9, 5.0);
+            HardwareCardbot.reverse(robot.leftDrive);
+            HardwareCardbot.reverse(robot.leftDrive2);
+            encoderDrive(0.5,16, 5.0);
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.RIGHT) {
 
@@ -269,6 +289,11 @@ public class CardbotAutoRedRight extends LinearOpMode {
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
+
+    public void encoderDrive(double speed, double inches, double timeoutS) {
+        encoderDrive(speed, inches, inches, timeoutS);
+    }
+
 
     /*
      *  Method to perfmorm a relative move, based on encoder counts.
@@ -320,14 +345,14 @@ public class CardbotAutoRedRight extends LinearOpMode {
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
-                   (runtime.seconds() < timeoutS) &&
-                   (robot.leftDrive.isBusy() && robot.rightDrive.isBusy() && robot.leftDrive2.isBusy() && robot.rightDrive2.isBusy())) {
+                    (runtime.seconds() < timeoutS) &&
+                    (robot.leftDrive.isBusy() && robot.rightDrive.isBusy() && robot.leftDrive2.isBusy() && robot.rightDrive2.isBusy())) {
 
                 // Display it for the driver.
                 telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d",
-                                            robot.leftDrive.getCurrentPosition(),
-                                            robot.rightDrive.getCurrentPosition());
+                        robot.leftDrive.getCurrentPosition(),
+                        robot.rightDrive.getCurrentPosition());
                 telemetry.update();
             }
 

@@ -53,7 +53,6 @@ public class HardwareCardbot
     public Servo rightClaw = null;
     public Servo sensorArm = null;
 
-    public Servo phoneArm = null;
 
     public NormalizedColorSensor cs = null;
 
@@ -71,7 +70,6 @@ public class HardwareCardbot
 
         cs = hwMap.get(NormalizedColorSensor.class, "cs");
         sensorArm = hwMap.get(Servo.class, "servoarm");
-        phoneArm = hwMap.get(Servo.class, "phoneaxis");
 
 
         leftDrive  = hwMap.get(DcMotor.class, "ld"); // Left Drive
@@ -128,7 +126,6 @@ public class HardwareCardbot
         rightClaw.setPosition(0.1);
 
         sensorArm.setPosition(0);
-        phoneArm.setPosition(0.5);
     }
 
 
