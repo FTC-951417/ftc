@@ -575,6 +575,7 @@ public class FtcRobotControllerActivity extends Activity
     factory = hardwareFactory;
 
     OpModeRegister userOpModeRegister = createOpModeRegister();
+    System.out.println("Opmode created");
     eventLoop = new FtcEventLoop(factory, userOpModeRegister, callback, this, programmingModeController);
     FtcEventLoopIdle idleLoop = new FtcEventLoopIdle(factory, userOpModeRegister, callback, this, programmingModeController);
 

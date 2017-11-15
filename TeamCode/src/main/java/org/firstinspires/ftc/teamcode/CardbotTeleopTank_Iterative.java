@@ -111,29 +111,15 @@ public class CardbotTeleopTank_Iterative extends OpMode {
 
         left = -gamepad1.left_stick_y;
         right = -gamepad1.right_stick_y;
-        if (!(gamepad1.dpad_down | gamepad1.dpad_up | gamepad1.dpad_left | gamepad1.dpad_right)) {
-            if(!(gamepad1.right_trigger > 0)) {
-                left = Range.clip(left, -1, 1);
-                right = Range.clip(right, -1, 1);
-            } else {
-                left = Range.clip(left, -0.32, 0.32);
-                right = Range.clip(right, -0.32, 0.32);
-            }
-            setLeft(left);
-            setRight(right);
-        } else {
-            if (!diagMode) {
-                if (gamepad1.dpad_left)
-                    strafe(false);
-                if (gamepad1.dpad_right)
-                    strafe(true);
-            } else {
-                if (gamepad1.dpad_left)
-                    diagLeft(forwardDiagMode);
-                if (gamepad1.dpad_right)
-                    diagRight(forwardDiagMode);
-            }
+        if(gamepad1.right_trigger <= 0) { // Right trigger not pressed, full speed
+            left = Range.clip(left, -1, 1);
+            right = Range.clip(right, -1, 1);
+        } else {  // ~1/3 speed, right trigger is pressed
+            left = Range.clip(left, -0.32, 0.32);
+            right = Range.clip(right, -0.32, 0.32);
         }
+        setLeft(left);
+        setRight(right);
 
         // Control servos with bumpers (Gamepad 2)
 
@@ -194,48 +180,6 @@ public class CardbotTeleopTank_Iterative extends OpMode {
     private void setRight(double power){
         robot.rightDrive.setPower(power);
         robot.rightDrive2.setPower(power);
-    }
-
-    /* Start mecanum functions */
-    /*  Remember to do the opposites of each set of motor in reverse!
-       rd + ld2 = Diag left
-       ld + rd2  = Diag right
-       rd + rd2  = Strafe left
-       ld + ld2  = Strafe right */
-
-    /**50% Speed buttonZ**/
-
-    private void diagLeft(boolean positive) {
-        double pwr = positive ? 0.5 : -0.5;
-        robot.rightDrive.setPower(pwr);
-        robot.leftDrive2.setPower(pwr);
-        telemetry.addData("Turn Power", pwr);
-        // Opposites
-        robot.rightDrive2.setPower(-pwr);
-        robot.leftDrive.setPower(-pwr);
-        telemetry.update();
-    }
-
-    private void diagRight(boolean positive) {
-        double pwr = positive ? 0.5 : -0.5; // TODO: Move reverse types to opposites because reverse right is actually reverse left.
-        robot.leftDrive.setPower(pwr);
-        robot.rightDrive2.setPower(pwr);
-        telemetry.addData("Diag Power", pwr);
-        // Opposites
-        robot.rightDrive.setPower(-pwr);
-        robot.leftDrive2.setPower(-pwr);
-        telemetry.update();
-    }
-
-    private void strafe(boolean goRight) {
-        double pwr = goRight ? 0.5 : -0.5;
-        robot.leftDrive.setPower(pwr);
-        robot.leftDrive2.setPower(-pwr);
-        telemetry.addData("Strafe Power", pwr);
-        // Opposites
-        robot.rightDrive.setPower(-pwr);
-        robot.rightDrive2.setPower(pwr);
-        telemetry.update();
     }
 
     /* Range functions */

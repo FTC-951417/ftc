@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptNullOp;
+import org.firstinspires.ftc.teamcode.auto.CardbotAutoRedRight;
 
 /**
  * {@link FtcOpModeRegister} is responsible for registering opmodes for use in an FTC game.
@@ -68,7 +69,6 @@ public class FtcOpModeRegister implements OpModeRegister {
         /**
          * Any manual OpMode class registrations should go here.
          */
-        manager.register("Auto Blue", new CardbotAutoDriveByEncoder_Linear("blue"));
-        manager.register("Auto Blue", new CardbotAutoDriveByEncoder_Linear("red"));
+
     }
 }

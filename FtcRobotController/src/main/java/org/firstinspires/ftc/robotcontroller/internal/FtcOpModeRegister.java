@@ -67,7 +67,5 @@ public class FtcOpModeRegister implements OpModeRegister {
         /**
          * Any manual OpMode class registrations should go here.
          */
-        manager.register("Auto Blue", new CardbotAutoDriveByEncoder_Linear("blue"));
-        manager.register("Auto Blue", new CardbotAutoDriveByEncoder_Linear("red"));
     }
 }

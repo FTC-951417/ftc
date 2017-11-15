@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.auto;
 
 import android.graphics.Color;
 
@@ -48,8 +48,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-
-import static org.firstinspires.ftc.teamcode.HardwareCardbot.robot;
+import org.firstinspires.ftc.teamcode.Alliance;
+import org.firstinspires.ftc.teamcode.HardwareCardbot;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -79,10 +79,10 @@ import static org.firstinspires.ftc.teamcode.HardwareCardbot.robot;
  */
 
 @Autonomous(name="Auto Red Right", group="Red")
-public class CardbotAutoDriveByEncoder_Linear extends LinearOpMode {
+public class CardbotAutoRedRight extends LinearOpMode {
 
     /* Declare OpMode members. */
-    //HardwareCardbot         robot   = new HardwareCardbot();   // Use a Pushbot's hardware
+    HardwareCardbot         robot   = new HardwareCardbot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
@@ -107,13 +107,9 @@ public class CardbotAutoDriveByEncoder_Linear extends LinearOpMode {
     VuforiaLocalizer vuforia;
 
 
-    public CardbotAutoDriveByEncoder_Linear(String allianceColor){
-        alliance.color = allianceColor;
-    }
-
     @Override
     public void runOpMode() {
-        alliance.color = "red";
+        alliance = new Alliance("red");
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
@@ -146,7 +142,7 @@ public class CardbotAutoDriveByEncoder_Linear extends LinearOpMode {
         robot.rightClaw.setPosition (0.45);
         robot.phoneArm.setPosition (0.5);
         robot.sensorArm.setPosition(1);
-
+        boolean turnedLeft = true;
         while(colors.red <= 0.5 || colors.blue <= 0.5) {
             try {
                 getColor();
@@ -156,13 +152,7 @@ public class CardbotAutoDriveByEncoder_Linear extends LinearOpMode {
         }
         if(colors.red > colors.blue) {
             robot.sensorArm.setPosition(1);
-            if(alliance.color == "blue") { // Turn Left
-                HardwareCardbot.reverse(robot.rightDrive);
-                HardwareCardbot.reverse(robot.rightDrive2);
-                encoderDrive(1, 3, 3, 5.0);
-                HardwareCardbot.reverse(robot.rightDrive);
-                HardwareCardbot.reverse(robot.rightDrive2);
-            } else { // Turn Right
+            { // Turn Right
                 HardwareCardbot.reverse(robot.leftDrive);
                 HardwareCardbot.reverse(robot.leftDrive2);
                 encoderDrive(1, 3, 3, 5.0);
@@ -170,41 +160,35 @@ public class CardbotAutoDriveByEncoder_Linear extends LinearOpMode {
                 HardwareCardbot.reverse(robot.leftDrive2);
             }
             robot.sensorArm.setPosition(0);
+            turnedLeft = false;
         }
         if(colors.blue > colors.red) {
-            robot.sensorArm.setPosition(1); robot.sensorArm.setPosition(1);
+            robot.sensorArm.setPosition(1);
             if(alliance.color == "red") { // Turn Left
                 HardwareCardbot.reverse(robot.rightDrive);
                 HardwareCardbot.reverse(robot.rightDrive2);
                 encoderDrive(1, 3, 3, 5.0);
                 HardwareCardbot.reverse(robot.rightDrive);
                 HardwareCardbot.reverse(robot.rightDrive2);
-            } else { // Turn Right
-                HardwareCardbot.reverse(robot.leftDrive);
-                HardwareCardbot.reverse(robot.leftDrive2);
-                encoderDrive(1, 3, 3, 5.0);
-                HardwareCardbot.reverse(robot.leftDrive);
-                HardwareCardbot.reverse(robot.leftDrive2);
             }
             robot.sensorArm.setPosition(0);
+            turnedLeft = true;
         }
 
-        robot.sensorArm.setPosition(1);
-
-        if(alliance.color == "red") { // Swat Left
-            HardwareCardbot.reverse(robot.rightDrive);
-            HardwareCardbot.reverse(robot.rightDrive2);
-            encoderDrive(1, 3, 3, 5.0);
-            HardwareCardbot.reverse(robot.rightDrive);
-            HardwareCardbot.reverse(robot.rightDrive2);
-
+        if(turnedLeft) { // Turn Right
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
             encoderDrive(1, 3, 3, 5.0);
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
+        } else { // Turn Left
+            HardwareCardbot.reverse(robot.rightDrive);
+            HardwareCardbot.reverse(robot.rightDrive2);
+            encoderDrive(1, 3, 3, 5.0);
+            HardwareCardbot.reverse(robot.rightDrive);
+            HardwareCardbot.reverse(robot.rightDrive2);
         }
-        robot.sensorArm.setPosition(0);
+
         robot.phoneArm.setPosition(0.5);
 
         encoderDrive(0.3,3, 3, 5 );
@@ -234,7 +218,7 @@ public class CardbotAutoDriveByEncoder_Linear extends LinearOpMode {
         boolean end = false;
         boolean increment = true;
 
-        RelicRecoveryVuMark vuMarkAnswer;
+        RelicRecoveryVuMark vuMarkAnswer = null;
         double posToSet = 0.5;
         int i = -1;
         while (!(end) && opModeIsActive()) {
@@ -268,15 +252,19 @@ public class CardbotAutoDriveByEncoder_Linear extends LinearOpMode {
         }
         robot.phoneArm.setPosition(0.5);
 
+        if(vuMarkAnswer == null || vuMarkAnswer == RelicRecoveryVuMark.UNKNOWN) {
+            requestOpModeStop();
+        }
+        if(vuMarkAnswer == RelicRecoveryVuMark.CENTER) {
 
-        // Step through each leg of the path,
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  -24,  -24, 5.0);  // S1: Forward 48 Inches with 5 Sec timeout
-        //encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        }
+        if(vuMarkAnswer == RelicRecoveryVuMark.LEFT) {
 
+        }
+        if(vuMarkAnswer == RelicRecoveryVuMark.RIGHT) {
 
-        sleep(1000);     // pause for servos to move
+        }
+
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
