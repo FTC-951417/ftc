@@ -78,6 +78,7 @@ import static org.firstinspires.ftc.teamcode.HardwareCardbot.robot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
+@Autonomous(name="Auto Red Right", group="Red")
 public class CardbotAutoDriveByEncoder_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -142,57 +143,52 @@ public class CardbotAutoDriveByEncoder_Linear extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         robot.leftClaw.setPosition (1);
-        robot.rightClaw.setPosition (0.32);
+        robot.rightClaw.setPosition (0.45);
         robot.phoneArm.setPosition (0.5);
         robot.sensorArm.setPosition(1);
-        /*
-        int i = 0;
+
         while(colors.red <= 0.5 || colors.blue <= 0.5) {
-            i++;
             try {
                 getColor();
             } catch(InterruptedException e) {
                 e.printStackTrace();
             }
-            if(i == 1000) {
-                encoderStrafe(0.3, 1.5, 1.5, 5, false);
-            }
         }
         if(colors.red > colors.blue) {
             robot.sensorArm.setPosition(1);
             if(alliance.color == "blue") { // Turn Left
-                HardwareCardbot.reverse(rightDrive);
-                HardwareCardbot.reverse(rightDrive2);
+                HardwareCardbot.reverse(robot.rightDrive);
+                HardwareCardbot.reverse(robot.rightDrive2);
                 encoderDrive(1, 3, 3, 5.0);
-                HardwareCardbot.reverse(rightDrive);
-                HardwareCardbot.reverse(rightDrive2);
+                HardwareCardbot.reverse(robot.rightDrive);
+                HardwareCardbot.reverse(robot.rightDrive2);
             } else { // Turn Right
-                HardwareCardbot.reverse(leftDrive);
-                HardwareCardbot.reverse(leftDrive2);
+                HardwareCardbot.reverse(robot.leftDrive);
+                HardwareCardbot.reverse(robot.leftDrive2);
                 encoderDrive(1, 3, 3, 5.0);
-                HardwareCardbot.reverse(leftDrive);
-                HardwareCardbot.reverse(leftDrive2);
+                HardwareCardbot.reverse(robot.leftDrive);
+                HardwareCardbot.reverse(robot.leftDrive2);
             }
             robot.sensorArm.setPosition(0);
         }
         if(colors.blue > colors.red) {
             robot.sensorArm.setPosition(1); robot.sensorArm.setPosition(1);
             if(alliance.color == "red") { // Turn Left
-                HardwareCardbot.reverse(rightDrive);
-                HardwareCardbot.reverse(rightDrive2);
+                HardwareCardbot.reverse(robot.rightDrive);
+                HardwareCardbot.reverse(robot.rightDrive2);
                 encoderDrive(1, 3, 3, 5.0);
-                HardwareCardbot.reverse(rightDrive);
-                HardwareCardbot.reverse(rightDrive2);
+                HardwareCardbot.reverse(robot.rightDrive);
+                HardwareCardbot.reverse(robot.rightDrive2);
             } else { // Turn Right
-                HardwareCardbot.reverse(leftDrive);
-                HardwareCardbot.reverse(leftDrive2);
+                HardwareCardbot.reverse(robot.leftDrive);
+                HardwareCardbot.reverse(robot.leftDrive2);
                 encoderDrive(1, 3, 3, 5.0);
-                HardwareCardbot.reverse(leftDrive);
-                HardwareCardbot.reverse(leftDrive2);
+                HardwareCardbot.reverse(robot.leftDrive);
+                HardwareCardbot.reverse(robot.leftDrive2);
             }
             robot.sensorArm.setPosition(0);
         }
-        */
+
         robot.sensorArm.setPosition(1);
 
         if(alliance.color == "red") { // Swat Left
@@ -363,82 +359,7 @@ public class CardbotAutoDriveByEncoder_Linear extends LinearOpMode {
         }
     }
 
-    public void encoderStrafe(double speed,
-                             double leftInches, double rightInches,
-                             double timeoutS, boolean goRight) {
-        int newLeftTarget;
-        int newRightTarget;
-        int newLeftTarget2;
-        int newRightTarget2;
 
-        // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-
-            // Determine new target position, and pass to motor controller
-            if(!goRight) {
-                newLeftTarget = robot.leftDrive.getCurrentPosition() - (int) (leftInches * COUNTS_PER_INCH);
-                newRightTarget = robot.rightDrive.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
-                newLeftTarget2 = robot.leftDrive2.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
-                newRightTarget2 = robot.rightDrive2.getCurrentPosition() - (int) (rightInches * COUNTS_PER_INCH);
-            } else {
-                newLeftTarget = robot.leftDrive.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
-                newRightTarget = robot.rightDrive.getCurrentPosition() - (int) (rightInches * COUNTS_PER_INCH);
-                newLeftTarget2 = robot.leftDrive2.getCurrentPosition() - (int) (leftInches * COUNTS_PER_INCH);
-                newRightTarget2 = robot.rightDrive2.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
-            }
-
-            robot.leftDrive.setTargetPosition(newLeftTarget);
-            robot.rightDrive.setTargetPosition(newRightTarget);
-            robot.leftDrive2.setTargetPosition(newLeftTarget2);
-            robot.rightDrive2.setTargetPosition(newRightTarget2);
-
-
-            // Turn On RUN_TO_POSITION
-            robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.leftDrive2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.rightDrive2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            // reset the timeout time and start motion.
-            runtime.reset();
-            robot.leftDrive.setPower(Math.abs(speed));
-            robot.rightDrive.setPower(Math.abs(speed));
-            robot.leftDrive2.setPower(Math.abs(speed));
-            robot.rightDrive2.setPower(Math.abs(speed));
-
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-            // its target position, the motion will stop.  This is "safer" in the event that the robot will
-            // always end the motion as soon as possible.
-            // However, if you require that BOTH motors have finished their moves before the robot continues
-            // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (robot.leftDrive.isBusy() && robot.rightDrive.isBusy() && robot.leftDrive2.isBusy() && robot.rightDrive2.isBusy())) {
-
-                // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
-                telemetry.addData("Path2",  "Running at %7d :%7d",
-                        robot.leftDrive.getCurrentPosition(),
-                        robot.rightDrive.getCurrentPosition());
-                telemetry.update();
-            }
-
-            // Stop all motion;
-            robot.leftDrive.setPower(0);
-            robot.rightDrive.setPower(0);
-            robot.leftDrive2.setPower(0);
-            robot.rightDrive2.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.leftDrive2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.rightDrive2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            //  sleep(250);   // optional pause after each move
-        }
-    }
 
 
     private void getColor() throws InterruptedException {
@@ -467,6 +388,7 @@ public class CardbotAutoDriveByEncoder_Linear extends LinearOpMode {
         telemetry.addLine()
                 .addData("a", "%.3f", colors.alpha)
                 .addData("r", "%.3f", colors.red)
+                .addData("g", "%.3f", colors.green)
                 .addData("g", "%.3f", colors.green)
                 .addData("b", "%.3f", colors.blue);
 
@@ -518,45 +440,7 @@ public class CardbotAutoDriveByEncoder_Linear extends LinearOpMode {
         robot.rightDrive2.setPower(power);
     }
 
-    /* Start mecanum functions */
-    /*  Remember to do the opposites of each set of motor in reverse!
-       rd + ld2 = Diag left
-       ld + rd2  = Diag right
-       rd + rd2  = Strafe left
-       ld + ld2  = Strafe right */
 
-    private void diagLeft(boolean positive) {
-        double pwr = positive ? 0.5 : -0.5;
-        robot.rightDrive.setPower(pwr);
-        robot.leftDrive2.setPower(pwr);
-        telemetry.addData("Turn Power", pwr);
-        // Opposites
-        robot.rightDrive2.setPower(-pwr);
-        robot.leftDrive.setPower(-pwr);
-        telemetry.update();
-    }
-
-    private void diagRight(boolean positive) {
-        double pwr = positive ? 0.5 : -0.5; // TODO: Move reverse types to opposites because reverse right is actually reverse left.
-        robot.leftDrive.setPower(pwr);
-        robot.rightDrive2.setPower(pwr);
-        telemetry.addData("Diag Power", pwr);
-        // Opposites
-        robot.rightDrive.setPower(-pwr);
-        robot.leftDrive2.setPower(-pwr);
-        telemetry.update();
-    }
-
-    private void strafe(boolean goRight) {
-        double pwr = goRight ? 0.5 : -0.5;
-        robot.leftDrive.setPower(pwr);
-        robot.leftDrive2.setPower(-pwr);
-        telemetry.addData("Strafe Power", pwr);
-        // Opposites
-        robot.rightDrive.setPower(-pwr);
-        robot.rightDrive2.setPower(pwr);
-        telemetry.update();
-    }
 }
 
 
