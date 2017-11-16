@@ -74,7 +74,7 @@ import org.firstinspires.ftc.teamcode.HardwareCardbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto Red Right", group="Blue")
+@Autonomous(name="Auto Blue Right", group="Blue")
 public class CardbotAutoBlueRight extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -109,7 +109,12 @@ public class CardbotAutoBlueRight extends LinearOpMode {
      */
     VuforiaLocalizer vuforia;
 
-
+    @Override
+    public void stop() {
+        //TODO: Stop all motors
+        //TODO: Copy things to other auton that will help it from here
+    }
+    
     @Override
     public void runOpMode() {
         alliance = new Alliance("red");
@@ -148,7 +153,7 @@ public class CardbotAutoBlueRight extends LinearOpMode {
         double LEFT_CLOSED = 1;
         double RIGHT_OPEN = 0.45;
         double RIGHT_CLOSED = 0;
-        robot.leftClaw.setPosition (LEFT_CLOSED);
+        robot.leftClaw.setPosition (LEFT_CLOSED);  //CLOSE CLAWS
         robot.rightClaw.setPosition (RIGHT_CLOSED);
 
 
@@ -158,11 +163,11 @@ public class CardbotAutoBlueRight extends LinearOpMode {
 
 
 
-        robot.sensorArm.setPosition(1);
+        robot.sensorArm.setPosition(1);   // Put down arm for color reading
         sleep(1500); // Wait for arm to move!
         //robot.sensorArm.setPosition(0);
 
-        boolean wentForward = true;
+        int dirId = 0;
         while(colors == null && opModeIsActive()){
             try {
                 getColor();
@@ -189,7 +194,7 @@ public class CardbotAutoBlueRight extends LinearOpMode {
 
             }
             robot.sensorArm.setPosition(0);
-            wentForward = false;
+            dirId = 1;
         }
         if(colors.blue > colors.red) {
             robot.sensorArm.setPosition(1);
@@ -199,27 +204,28 @@ public class CardbotAutoBlueRight extends LinearOpMode {
 
             }
             robot.sensorArm.setPosition(0);
-            wentForward = true;
+            dirId = 2;
         }
 
-        if(wentForward) { // Forward
+        if(dirId = 2) { // Forward
 
             encoderDrive(0.2, -3, -3, 5.0);
 
-        } else { // Forward
+        } else if(dirId = 1) { // Forward
 
             encoderDrive(0.2, 3, 3, 5.0);
 
+        } else {
+            requestOpModeStop(); //Error   
         }
 
         robot.mainArm.setPower(-0.8);  // Move arm up so it doesn't create friction
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 0.8)) {
-        }
+        while (opModeIsActive() && (runtime.seconds() < 0.8)) {}
 
-        robot.mainArm.setPower(0);
+        robot.mainArm.setPower(0);  // Stop moving arm after 800ms
 
-        encoderDrive(0.3, 10, 5);
+        encoderDrive(0.3, 10, 5); // Forward 10in
 
 
 
@@ -265,22 +271,29 @@ public class CardbotAutoBlueRight extends LinearOpMode {
 
         telemetry.addData("VuMark:", vuMarkAnswer);
         if(vuMarkAnswer == null || vuMarkAnswer == RelicRecoveryVuMark.UNKNOWN) {
-            requestOpModeStop();
+            // Some error happened. Go right due to highest reliability
+            vuMarkAnswer = RelicRecoveryVuMark.RIGHT;
         }
 
-        encoderDrive(0.4, -20, 5.0); // Move back
-
-
+        encoderDrive(0.4, -20, 5.0); // Move back (this is because the VuMark is on the opposite side of the scoring area)
+        // Turn around (left/counterclokwise), this is because the right side has the color sensor and the robot is now "backwards"
+        HardwareCardbot.reverse(robot.leftDrive);
+        HardwareCardbot.reverse(robot.leftDrive2);
+        encoderDrive(1, 24, 5.0);
+        HardwareCardbot.reverse(robot.leftDrive);
+        HardwareCardbot.reverse(robot.leftDrive2);
+        
+        
         if(vuMarkAnswer == RelicRecoveryVuMark.CENTER) {
-            //Turn Left 7 inches
+            //Turn Left 10 inches
 
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
-            encoderDrive(1, 7, 5.0);
+            encoderDrive(1, 10, 5.0);
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
 
-            encoderDrive(0.5,22,22,5.0);
+            encoderDrive(0.5, 22, 5.0); // Go forward 22in
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.LEFT) {
             //Turn Left 9 inches
@@ -296,15 +309,16 @@ public class CardbotAutoBlueRight extends LinearOpMode {
 
         }
         robot.leftClaw.setPosition(LEFT_OPEN);
-        robot.rightClaw.setPosition(RIGHT_OPEN);
-        encoderDrive(0.5, -3, 5.0);
+        robot.rightClaw.setPosition(RIGHT_OPEN);  // Open claw to free glyph
+        //encoderDrive(0.5, -3, 5.0); Commented out because staying in place will hold the glpyh there better
 
 
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
-
+    
+    /** This exists to simplify in case we desire no difference in the inches **/
     public void encoderDrive(double speed, double inches, double timeoutS) {
         encoderDrive(speed, inches, inches, timeoutS);
     }
@@ -387,7 +401,7 @@ public class CardbotAutoBlueRight extends LinearOpMode {
         }
     }
 
-
+    /** This just doesn't work **/
     public void encoderArm(double speed,
                              double inches,
                              double timeoutS) {
@@ -439,7 +453,7 @@ public class CardbotAutoBlueRight extends LinearOpMode {
 
 
 
-
+    /** Retreives color and gives data **/
     private void getColor() throws InterruptedException {
 
         // values is a reference to the hsvValues array.
