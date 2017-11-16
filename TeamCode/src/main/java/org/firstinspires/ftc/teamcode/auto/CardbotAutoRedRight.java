@@ -90,6 +90,13 @@ public class CardbotAutoRedRight extends LinearOpMode {
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * Math.PI);
+
+    static final double     COUNTS_PER_MOTOR_REV_ARM    = 1440 ;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION_ARM    = 8.0 ;     // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES_ARM   = 1.0 ;     // For figuring circumference
+    static final double     COUNTS_PER_INCH_ARM         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * Math.PI);
+
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
     public NormalizedRGBA colors;
@@ -138,8 +145,15 @@ public class CardbotAutoRedRight extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        robot.leftClaw.setPosition (0.55);
-        robot.rightClaw.setPosition (0.45);
+
+
+
+        double LEFT_OPEN = 0.45;
+        double LEFT_CLOSED = 1;
+        double RIGHT_OPEN = 0.45;
+        double RIGHT_CLOSED = 0;
+        robot.leftClaw.setPosition (LEFT_CLOSED);
+        robot.rightClaw.setPosition (RIGHT_CLOSED);
 
 
 
@@ -173,41 +187,33 @@ public class CardbotAutoRedRight extends LinearOpMode {
 
         if(colors.red > colors.blue) {
             robot.sensorArm.setPosition(1);
-            { // Turn Right
-                HardwareCardbot.reverse(robot.rightDrive);
-                HardwareCardbot.reverse(robot.rightDrive2);
+            { // Turn Left (FORWARD)
+
                 encoderDrive(0.2, 3, 3, 5.0);
-                HardwareCardbot.reverse(robot.rightDrive);
-                HardwareCardbot.reverse(robot.rightDrive2);
-            }
-            robot.sensorArm.setPosition(0);
-            turnedLeft = false;
-        }
-        if(colors.blue > colors.red) {
-            robot.sensorArm.setPosition(1);
-            { // Turn Left
-            HardwareCardbot.reverse(robot.leftDrive);
-            HardwareCardbot.reverse(robot.leftDrive2);
-            encoderDrive(0.2, 3, 3, 5.0);
-            HardwareCardbot.reverse(robot.leftDrive);
-            HardwareCardbot.reverse(robot.leftDrive2);
+
             }
             robot.sensorArm.setPosition(0);
             turnedLeft = true;
         }
+        if(colors.blue > colors.red) {
+            robot.sensorArm.setPosition(1);
+            { // Turn Right (BACKWARD)
 
-        if(turnedLeft) { // Turn Right
-            HardwareCardbot.reverse(robot.rightDrive);
-            HardwareCardbot.reverse(robot.rightDrive2);
+                encoderDrive(0.2, -3, -3, 5.0);
+
+            }
+            robot.sensorArm.setPosition(0);
+            turnedLeft = false;
+        }
+
+        if(turnedLeft) { // Turn Right (BACKWARD)
+
+            encoderDrive(0.2, -3, -3, 5.0);
+
+        } else { // Turn Left (FORWARD)
+
             encoderDrive(0.2, 3, 3, 5.0);
-            HardwareCardbot.reverse(robot.rightDrive);
-            HardwareCardbot.reverse(robot.rightDrive2);
-        } else { // Turn Left
-            HardwareCardbot.reverse(robot.leftDrive);
-            HardwareCardbot.reverse(robot.leftDrive2);
-            encoderDrive(0.2, 3, 3, 5.0);
-            HardwareCardbot.reverse(robot.leftDrive);
-            HardwareCardbot.reverse(robot.leftDrive2);
+
         }
 
 
@@ -260,16 +266,18 @@ public class CardbotAutoRedRight extends LinearOpMode {
         if(vuMarkAnswer == null || vuMarkAnswer == RelicRecoveryVuMark.UNKNOWN) {
             requestOpModeStop();
         }
+
+
         if(vuMarkAnswer == RelicRecoveryVuMark.CENTER) {
             //Turn Left 6 inches
 
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
-            encoderDrive(1, 6, 5.0);
+            encoderDrive(1, 7, 5.0);
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
 
-            encoderDrive(0.5,14,14,5.0);
+            encoderDrive(0.5,20,20,5.0);
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.LEFT) {
             //Turn Left 9 inches
@@ -284,6 +292,10 @@ public class CardbotAutoRedRight extends LinearOpMode {
         if(vuMarkAnswer == RelicRecoveryVuMark.RIGHT) {
 
         }
+        robot.leftClaw.setPosition(LEFT_OPEN);
+        robot.rightClaw.setPosition(RIGHT_OPEN);
+        encoderDrive(0.5, -3, 5.0);
+
 
 
         telemetry.addData("Path", "Complete");
@@ -369,6 +381,56 @@ public class CardbotAutoRedRight extends LinearOpMode {
             robot.rightDrive2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             //  sleep(250);   // optional pause after each move
+        }
+    }
+
+
+    public void encoderArm(double speed,
+                             double inches,
+                             double timeoutS) {
+        int newTarget;
+        robot.mainArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newTarget = robot.leftDrive.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH_ARM);
+            robot.mainArm.setTargetPosition(newTarget);
+
+
+            // Turn On RUN_TO_POSITION
+            robot.mainArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            robot.mainArm.setPower(Math.abs(speed));
+
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (robot.leftDrive.isBusy() && robot.rightDrive.isBusy() && robot.leftDrive2.isBusy() && robot.rightDrive2.isBusy())) {
+
+               telemetry.addData("Arm", "Moving");
+                telemetry.update();
+            }
+
+            // Stop all motion;
+            robot.mainArm.setPower(0);
+
+
+            // Turn off RUN_TO_POSITION
+            robot.mainArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         }
     }
 

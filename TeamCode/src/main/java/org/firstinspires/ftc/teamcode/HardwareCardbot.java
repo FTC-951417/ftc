@@ -122,8 +122,13 @@ public class HardwareCardbot
         flipArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mainArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        leftClaw.setPosition(0.1);
-        rightClaw.setPosition(0.1);
+        double LEFT_OPEN = 0.45;
+        double LEFT_CLOSED = 1;
+        double RIGHT_OPEN = 0.45;
+        double RIGHT_CLOSED = 0;
+
+        leftClaw.setPosition(LEFT_OPEN);
+        rightClaw.setPosition(RIGHT_OPEN);
 
         sensorArm.setPosition(0);
     }
