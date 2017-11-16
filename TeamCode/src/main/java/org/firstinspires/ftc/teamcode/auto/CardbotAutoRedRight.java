@@ -216,7 +216,12 @@ public class CardbotAutoRedRight extends LinearOpMode {
 
         }
 
+        robot.mainArm.setPower(-1);  // Move arm up so it doesn't create friction
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 1)) { //TODO: SLOW DOWN!!!
+        }
 
+        robot.mainArm.setPower(0);
 
         encoderDrive(0.3, 10, 5);
 
@@ -269,7 +274,7 @@ public class CardbotAutoRedRight extends LinearOpMode {
 
 
         if(vuMarkAnswer == RelicRecoveryVuMark.CENTER) {
-            //Turn Left 6 inches
+            //Turn Left 7 inches
 
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
@@ -277,7 +282,7 @@ public class CardbotAutoRedRight extends LinearOpMode {
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
 
-            encoderDrive(0.5,20,20,5.0);
+            encoderDrive(0.5,22,22,5.0);
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.LEFT) {
             //Turn Left 9 inches
