@@ -74,7 +74,7 @@ import org.firstinspires.ftc.teamcode.HardwareCardbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto Red Right", group="Red")
+@Autonomous(name="Auto Red Left", group="Red")
 public class CardbotAutoRedLeft extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -216,7 +216,7 @@ public class CardbotAutoRedLeft extends LinearOpMode {
 
         robot.mainArm.setPower(-0.8);  // Move arm up so it doesn't create friction
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 0.8)) {}
+        while (opModeIsActive() && (runtime.seconds() < 0.3)) {}
 
         robot.mainArm.setPower(0);  // Stop moving arm after 800ms
 
@@ -309,7 +309,7 @@ public class CardbotAutoRedLeft extends LinearOpMode {
         }
         robot.leftClaw.setPosition(LEFT_OPEN);
         robot.rightClaw.setPosition(RIGHT_OPEN);
-        encoderDrive(0.5, -3, 5.0);
+        //encoderDrive(0.5, -3, 5.0); Keeps glyph in place better
 
 
 
@@ -399,8 +399,15 @@ public class CardbotAutoRedLeft extends LinearOpMode {
         }
     }
 
+    public double diameter = 16;
+    public double circumference = diameter * Math.PI;
+
     public double degreesToInches(int degrees) {
-        return degrees * 0.139623777;
+        return (degrees / 360) * circumference;
+    }
+
+    public double inchesToDegrees(double inches) {
+        return 360 * (inches / circumference);
     }
 
 

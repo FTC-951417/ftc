@@ -154,9 +154,6 @@ public class CardbotAutoBlueRight extends LinearOpMode {
 
 
 
-
-
-
         robot.sensorArm.setPosition(1);   // Put down arm for color reading
         sleep(1500); // Wait for arm to move!
         //robot.sensorArm.setPosition(0);
@@ -184,7 +181,7 @@ public class CardbotAutoBlueRight extends LinearOpMode {
             robot.sensorArm.setPosition(1);
             { // Backward
 
-                encoderDrive(0.2, -3, -3, 5.0);
+                encoderDrive(0.2, -4, -4, 5.0);
 
             }
             robot.sensorArm.setPosition(0);
@@ -207,7 +204,7 @@ public class CardbotAutoBlueRight extends LinearOpMode {
 
         } else if(dirId == 1) { // Forward
 
-            encoderDrive(0.2, 3, 3, 5.0);
+            encoderDrive(0.2, 4, 4, 5.0);
 
         } else {
             requestOpModeStop(); //Error   
@@ -215,11 +212,11 @@ public class CardbotAutoBlueRight extends LinearOpMode {
 
         robot.mainArm.setPower(-0.8);  // Move arm up so it doesn't create friction
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 0.8)) {}
+        while (opModeIsActive() && (runtime.seconds() < 0.45)) {}
 
         robot.mainArm.setPower(0);  // Stop moving arm after 800ms
 
-        encoderDrive(0.3, 10, 5); // Forward 10in
+        //encoderDrive(0.3, 5, 5);
 
 
 
@@ -270,46 +267,65 @@ public class CardbotAutoBlueRight extends LinearOpMode {
         }
 
         encoderDrive(0.4, -20, 5.0); // Move back (this is because the VuMark is on the opposite side of the scoring area)
-        // Turn around (left/counterclokwise), this is because the right side has the color sensor and the robot is now "backwards"
+        // Turn around (left/counterclockwise), this is because the right side has the color sensor and the robot is now "backwards"
         HardwareCardbot.reverse(robot.leftDrive);
         HardwareCardbot.reverse(robot.leftDrive2);
-        encoderDrive(1, 24, 5.0);
+        encoderDrive(1,25,5.0);
         HardwareCardbot.reverse(robot.leftDrive);
         HardwareCardbot.reverse(robot.leftDrive2);
         
         
         if(vuMarkAnswer == RelicRecoveryVuMark.CENTER) {
-            //Turn Left 10 inches
+            //Turn Left 12 inches
 
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
-            encoderDrive(1, 10, 5.0);
+            encoderDrive(1, 7, 5.0);
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
 
-            encoderDrive(0.5, 22, 5.0); // Go forward 22in
+            encoderDrive(0.5, 2, 5.0); // Go forward 22in
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.LEFT) {
-            //Turn Left 9 inches
+            //Turn Left 15 inches
 
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
-            encoderDrive(1, 9, 5.0);
+            encoderDrive(1, 12, 5.0);
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
-            encoderDrive(0.5,16, 5.0);
+            encoderDrive(0.5,17, 5.0);
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.RIGHT) {
+            //Turn Left 12 inches
 
+            HardwareCardbot.reverse(robot.leftDrive);
+            HardwareCardbot.reverse(robot.leftDrive2);
+            encoderDrive(1, 5, 5.0);
+            HardwareCardbot.reverse(robot.leftDrive);
+            HardwareCardbot.reverse(robot.leftDrive2);
+
+            encoderDrive(0.5, 3, 5.0); // Go forward 22in
         }
         robot.leftClaw.setPosition(LEFT_OPEN);
         robot.rightClaw.setPosition(RIGHT_OPEN);  // Open claw to free glyph
-        //encoderDrive(0.5, -3, 5.0); Commented out because staying in place will hold the glpyh there better
+        //encoderDrive(0.5, -3, 5.0); Keeps glyph in place better
 
 
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
+    }
+
+    public double diameter = 16;
+    public double circumference = diameter * Math.PI;
+
+    public double degreesToInches(int degrees) {
+        return (degrees / 360) * circumference;
+    }
+
+    public double inchesToDegrees(double inches) {
+        return 360 * (inches / circumference);
     }
     
     /** This exists to simplify in case we desire no difference in the inches **/

@@ -206,11 +206,11 @@ public class CardbotAutoRedRight extends LinearOpMode {
             dirId = 1;
         }
 
-        if(dirId == 1) { // Turn Right (BACKWARD)
+        if(dirId == 2) { // Turn Right (BACKWARD)
 
             encoderDrive(0.2, -3, -3, 5.0);
 
-        } else if(dirId == 2) { // Turn Left (FORWARD)
+        } else if(dirId == 1) { // Turn Left (FORWARD)
 
             encoderDrive(0.2, 3, 3, 5.0);
 
@@ -218,17 +218,7 @@ public class CardbotAutoRedRight extends LinearOpMode {
             requestOpModeStop(); // Error
         }
 
-        robot.mainArm.setPower(-0.8);  // Move arm up so it doesn't create friction
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 0.8)) {}
-
-        robot.mainArm.setPower(0);  // Stop moving arm after 800ms
-
-        robot.mainArm.setPower(0);
-
-        encoderDrive(0.3, 10, 5);
-
-
+        sleep(500);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -276,17 +266,31 @@ public class CardbotAutoRedRight extends LinearOpMode {
             vuMarkAnswer = RelicRecoveryVuMark.RIGHT;
         }
 
+        robot.mainArm.setPower(-0.8);  // Move arm up so it doesn't create friction
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 0.3)) {}
+
+        robot.mainArm.setPower(0);  // Stop moving arm after 800ms
+
+        robot.mainArm.setPower(0);
+
+        encoderDrive(0.3, 10, 5);
+
+        sleep(1000); // Wait for motors to come to rest
+
+
+
 
         if(vuMarkAnswer == RelicRecoveryVuMark.CENTER) {
             //Turn Left 7 inches
 
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
-            encoderDrive(1, 7, 5.0);
+            encoderDrive(1, dirId == 2 ? 7 : 8, 5.0);
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
 
-            encoderDrive(0.5,22,22,5.0);
+            encoderDrive(0.5,24,22,5.0);
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.LEFT) {
             //Turn Left 10 inches
@@ -311,12 +315,24 @@ public class CardbotAutoRedRight extends LinearOpMode {
         }
         robot.leftClaw.setPosition(LEFT_OPEN);
         robot.rightClaw.setPosition(RIGHT_OPEN);
-        encoderDrive(0.5, -3, 5.0);
+        //encoderDrive(0.5, -3, 5.0); Keeps glyph in place better
 
 
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
+    }
+
+
+    public double diameter = 16;
+    public double circumference = diameter * Math.PI;
+
+    public double degreesToInches(int degrees) {
+        return (degrees / 360) * circumference;
+    }
+
+    public double inchesToDegrees(double inches) {
+        return 360 * (inches / circumference);
     }
 
     public void encoderDrive(double speed, double inches, double timeoutS) {
