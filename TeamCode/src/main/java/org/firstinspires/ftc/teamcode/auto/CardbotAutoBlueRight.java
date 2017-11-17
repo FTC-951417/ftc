@@ -34,6 +34,7 @@ import android.graphics.Color;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -108,10 +109,10 @@ public class CardbotAutoBlueRight extends LinearOpMode {
      * localization engine.
      */
     VuforiaLocalizer vuforia;
-    
+
     @Override
     public void runOpMode() {
-        alliance = new Alliance("red");
+        alliance = new Alliance("blue");
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
@@ -180,8 +181,9 @@ public class CardbotAutoBlueRight extends LinearOpMode {
         if(colors.red > colors.blue) {
             robot.sensorArm.setPosition(1);
             { // Backward
-
-                encoderDrive(0.2, -4, -4, 5.0);
+                robot.reverseAll();
+                encoderDrive(0.2, 4, 4, 5.0);
+                robot.reverseAll();
 
             }
             robot.sensorArm.setPosition(0);
@@ -199,20 +201,20 @@ public class CardbotAutoBlueRight extends LinearOpMode {
         }
 
         if(dirId == 2) { // Forward
-
-            encoderDrive(0.2, -4, -4, 5.0);
-
+            robot.reverseAll();
+            encoderDrive(0.2, 4, 4, 5.0);
+            robot.reverseAll();
         } else if(dirId == 1) { // Forward
 
             encoderDrive(0.2, 4, 4, 5.0);
 
         } else {
-            requestOpModeStop(); //Error   
+            requestOpModeStop(); //Error
         }
 
         robot.mainArm.setPower(-0.8);  // Move arm up so it doesn't create friction
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 0.45)) {}
+        while (opModeIsActive() && (runtime.seconds() < 0.5)) {}
 
         robot.mainArm.setPower(0);  // Stop moving arm after 800ms
 
@@ -245,9 +247,7 @@ public class CardbotAutoBlueRight extends LinearOpMode {
         boolean increment = true;
 
         RelicRecoveryVuMark vuMarkAnswer = null;
-        int i = -1;
         while (!(end) && opModeIsActive()) {
-            i++;
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
                 vuMarkAnswer = vuMark;
@@ -265,49 +265,39 @@ public class CardbotAutoBlueRight extends LinearOpMode {
             // Some error happened. Go right due to highest reliability
             vuMarkAnswer = RelicRecoveryVuMark.RIGHT;
         }
-
-        encoderDrive(0.4, -20, 5.0); // Move back (this is because the VuMark is on the opposite side of the scoring area)
+        robot.reverseAll();
+        encoderDrive(0.4, 20, 5.0); // Move back (this is because the VuMark is on the opposite side of the scoring area)
+        robot.reverseAll();
         // Turn around (left/counterclockwise), this is because the right side has the color sensor and the robot is now "backwards"
         HardwareCardbot.reverse(robot.leftDrive);
         HardwareCardbot.reverse(robot.leftDrive2);
         encoderDrive(1,25,5.0);
         HardwareCardbot.reverse(robot.leftDrive);
         HardwareCardbot.reverse(robot.leftDrive2);
-        
-        
+
+        vuMarkAnswer = RelicRecoveryVuMark.CENTER;
+
         if(vuMarkAnswer == RelicRecoveryVuMark.CENTER) {
             //Turn Left 15 inches
-            encoderDrive(0.2, -3, 5.0);
+            robot.reverseAll();
+            encoderDrive(0.2, 3, 5.0);
+            robot.reverseAll();
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
-            encoderDrive(1, 12, 5.0);
+            encoderDrive(0.5, 12, 5.0);
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
             encoderDrive(0.5,9, 5.0);
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.LEFT) {
-            //Turn Left 15 inches
-            encoderDrive(0.5, -5, 7.0);
 
-            sleep(200);
+            robot.leftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+            robot.leftDrive2.setDirection(DcMotorSimple.Direction.REVERSE);
+            encoderDrive(0.3, 18, 7.0);
+            robot.leftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+            robot.leftDrive2.setDirection(DcMotorSimple.Direction.FORWARD);
 
-            HardwareCardbot.reverse(robot.leftDrive);
-            HardwareCardbot.reverse(robot.leftDrive2);
-            encoderDrive(1, 8, 4, 7.0);
-            HardwareCardbot.reverse(robot.leftDrive);
-            HardwareCardbot.reverse(robot.leftDrive2);
-
-            sleep(200);
-
-            HardwareCardbot.reverse(robot.leftDrive);
-            HardwareCardbot.reverse(robot.leftDrive2);
-            encoderDrive(1, 12, 6, 7.0);
-            HardwareCardbot.reverse(robot.leftDrive);
-            HardwareCardbot.reverse(robot.leftDrive2);
-
-            sleep(200);
-
-            encoderDrive(0.5,6, 5.0);
+            encoderDrive(0.5,4, 5.0);
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.RIGHT) {
             //Turn Left 12 inches
@@ -340,7 +330,7 @@ public class CardbotAutoBlueRight extends LinearOpMode {
     public double inchesToDegrees(double inches) {
         return 360 * (inches / circumference);
     }
-    
+
     /** This exists to simplify in case we desire no difference in the inches **/
     public void encoderDrive(double speed, double inches, double timeoutS) {
         encoderDrive(speed, inches, inches, timeoutS);

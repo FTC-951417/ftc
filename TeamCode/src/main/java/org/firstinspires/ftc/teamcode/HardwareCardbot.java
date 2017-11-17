@@ -143,5 +143,37 @@ public class HardwareCardbot
         }
     }
 
+    /** Reverse direction of all four motors at once **/
+    public void reverseAll(){
+        Direction motorCurDir = leftDrive.getDirection();
+        if(motorCurDir == Direction.FORWARD) {
+            leftDrive.setDirection(Direction.REVERSE);
+        } else {
+            leftDrive.setDirection(Direction.FORWARD);
+        }
+
+        Direction motorCurDir2 = leftDrive2.getDirection();
+        if(motorCurDir2 == Direction.FORWARD) {
+            leftDrive2.setDirection(Direction.REVERSE);
+        } else {
+            leftDrive2.setDirection(Direction.FORWARD);
+        }
+
+        Direction motorCurDir3 = rightDrive.getDirection();
+        if(motorCurDir3 == Direction.FORWARD) {
+            rightDrive.setDirection(Direction.REVERSE);
+        } else {
+            rightDrive.setDirection(Direction.FORWARD);
+        }
+
+        Direction motorCurDir4 = rightDrive2.getDirection();
+        if(motorCurDir4 == Direction.FORWARD) {
+            rightDrive2.setDirection(Direction.REVERSE);
+        } else {
+            rightDrive2.setDirection(Direction.FORWARD);
+        }
+    }
+
+
  }
 
