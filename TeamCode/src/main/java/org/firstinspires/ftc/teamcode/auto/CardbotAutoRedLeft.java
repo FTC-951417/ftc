@@ -32,19 +32,15 @@ package org.firstinspires.ftc.teamcode.auto;
 import android.graphics.Color;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
@@ -78,8 +74,8 @@ import org.firstinspires.ftc.teamcode.HardwareCardbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto Blue Left", group="Left")
-public class CardbotAutoBlueLeft extends LinearOpMode {
+@Autonomous(name="Auto Red Left", group="Red")
+public class CardbotAutoRedLeft extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareCardbot         robot   = new HardwareCardbot();   // Use a Pushbot's hardware
@@ -116,7 +112,7 @@ public class CardbotAutoBlueLeft extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        alliance = new Alliance("blue");
+        alliance = new Alliance("red");
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
@@ -187,34 +183,32 @@ public class CardbotAutoBlueLeft extends LinearOpMode {
 
         if(colors.red > colors.blue) {
             robot.sensorArm.setPosition(1);
-            { // Turn Right (BACKWARD)
-                robot.reverseAll();
-                encoderDrive(0.2, 3, 3, 5.0);
-                robot.reverseAll();
-            }
-            robot.sensorArm.setPosition(0);
-            dirId = 1;
-        }
-        if(colors.blue > colors.red) {
-            robot.sensorArm.setPosition(1);
             { // Turn Left (FORWARD)
 
-                encoderDrive(0.2, 4, 4, 5.0);
+                encoderDrive(0.2, 3, 3, 5.0);
 
             }
             robot.sensorArm.setPosition(0);
             dirId = 2;
         }
+        if(colors.blue > colors.red) {
+            robot.sensorArm.setPosition(1);
+            { // Turn Right (BACKWARD)
+
+                encoderDrive(0.2, -3, -3, 5.0);
+
+            }
+            robot.sensorArm.setPosition(0);
+            dirId = 1;
+        }
 
         if(dirId == 2) { // Turn Right (BACKWARD)
 
-            robot.reverseAll();
-            encoderDrive(0.2, 4, 4, 5.0);
-            robot.reverseAll();
+            encoderDrive(0.2, -3, -3, 5.0);
 
         } else if(dirId == 1) { // Turn Left (FORWARD)
 
-            encoderDrive(0.2, 4, 4, 5.0);
+            encoderDrive(0.2, 3, 3, 5.0);
 
         } else {
             requestOpModeStop(); // Error
@@ -276,54 +270,52 @@ public class CardbotAutoBlueLeft extends LinearOpMode {
 
         robot.mainArm.setPower(0);
 
-        HardwareCardbot.reverse(robot.leftDrive);
-        HardwareCardbot.reverse(robot.leftDrive2);
-        encoderDrive(0.3, 28, 5);
-        HardwareCardbot.reverse(robot.leftDrive);
-        HardwareCardbot.reverse(robot.leftDrive2);
-
-        encoderDrive(0.3, 10, 5);
+        encoderDrive(0.3, 35, 45, 5);
 
         sleep(1000); // Wait for motors to come to rest
 
+        HardwareCardbot.reverse(robot.rightDrive);
+        HardwareCardbot.reverse(robot.rightDrive2);
+        encoderDrive(0.5, 22, 5.0);
+        HardwareCardbot.reverse(robot.rightDrive);
+        HardwareCardbot.reverse(robot.rightDrive2);
+
 
         if(vuMarkAnswer == RelicRecoveryVuMark.CENTER) {
-            //Turn Right 7-8 inches
+            //Turn Left 7 inches
 
-            HardwareCardbot.reverse(robot.rightDrive);
-            HardwareCardbot.reverse(robot.rightDrive2);
-            encoderDrive(0.3, 1, 5.0);
-            HardwareCardbot.reverse(robot.rightDrive);
-            HardwareCardbot.reverse(robot.rightDrive2);
+            HardwareCardbot.reverse(robot.leftDrive);
+            HardwareCardbot.reverse(robot.leftDrive2);
+            encoderDrive(1, 10, 5.0);
+            HardwareCardbot.reverse(robot.leftDrive);
+            HardwareCardbot.reverse(robot.leftDrive2);
 
             encoderDrive(0.5,24,22,5.0);
-        }
-        if(vuMarkAnswer == RelicRecoveryVuMark.RIGHT) {
-            //Turn Right 10 inches
-
-            HardwareCardbot.reverse(robot.rightDrive);
-            HardwareCardbot.reverse(robot.rightDrive2);
-            encoderDrive(0.3, 3, 5.0);
-            HardwareCardbot.reverse(robot.rightDrive);
-            HardwareCardbot.reverse(robot.rightDrive2);
-
-            encoderDrive(0.5,24, 5.0);
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.LEFT) {
-
+            //Turn Left 10 inches
 
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
-            encoderDrive(0.3, 3, 5.0);
+            encoderDrive(1, 14, 5.0);
+            HardwareCardbot.reverse(robot.leftDrive);
+            HardwareCardbot.reverse(robot.leftDrive2);
+            encoderDrive(0.5,26, 5.0);
+        }
+        if(vuMarkAnswer == RelicRecoveryVuMark.RIGHT) {
+            //Turn Left 3 inches
+
+            HardwareCardbot.reverse(robot.leftDrive);
+            HardwareCardbot.reverse(robot.leftDrive2);
+            encoderDrive(1, 3, 5.0);
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
 
-            encoderDrive(0.5,24,22,5.0);
+            encoderDrive(0.5,20,5.0);
         }
         robot.leftClaw.setPosition(LEFT_OPEN);
         robot.rightClaw.setPosition(RIGHT_OPEN);
-        encoderDrive(0.5, -3, 5.0);
-
+        //encoderDrive(0.5, -3, 5.0); Keeps glyph in place better
 
 
 
@@ -332,7 +324,7 @@ public class CardbotAutoBlueLeft extends LinearOpMode {
     }
 
 
-    public double diameter = 16;
+    public double diameter = 14.25;
     public double circumference = diameter * Math.PI;
 
     public double degreesToInches(int degrees) {
@@ -427,8 +419,8 @@ public class CardbotAutoBlueLeft extends LinearOpMode {
 
 
     public void encoderArm(double speed,
-                           double inches,
-                           double timeoutS) {
+                             double inches,
+                             double timeoutS) {
         int newTarget;
         robot.mainArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -461,7 +453,7 @@ public class CardbotAutoBlueLeft extends LinearOpMode {
                     (runtime.seconds() < timeoutS) &&
                     (robot.leftDrive.isBusy() && robot.rightDrive.isBusy() && robot.leftDrive2.isBusy() && robot.rightDrive2.isBusy())) {
 
-                telemetry.addData("Arm", "Moving");
+               telemetry.addData("Arm", "Moving");
                 telemetry.update();
             }
 
