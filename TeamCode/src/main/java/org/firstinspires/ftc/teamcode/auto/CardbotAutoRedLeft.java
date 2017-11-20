@@ -332,7 +332,7 @@ public class CardbotAutoRedLeft extends LinearOpMode {
     }
 
 
-    public double diameter = 14.25;
+    public double diameter = 16.25;
     public double circumference = diameter * Math.PI;
 
     public double degreesToInches(int degrees) {

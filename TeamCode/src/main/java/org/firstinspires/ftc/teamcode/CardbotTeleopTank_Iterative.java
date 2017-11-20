@@ -46,6 +46,16 @@ public class CardbotTeleopTank_Iterative extends OpMode {
     private boolean diagMode = false;
     private boolean forwardDiagMode = true;
 
+    //PID Variables
+
+    private final double ticksPerRevolution = 1000;
+    private double prevTime;
+    private int prevLeftEncoderPosition;
+    private int prevRightEncoderPosition;
+    private int prevLeft2EncoderPosition;
+    private int prevRight2EncoderPosition;
+
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -67,6 +77,11 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         } catch(InterruptedException e){ telemetry.addData("Say3", "Sleep interrupted! Tell a programmer!"); }
         telemetry.addData("Say4", "Hit play to start control.");
         telemetry.update();
+        prevTime = 0;
+        prevLeftEncoderPosition = robot.leftDrive.getCurrentPosition();
+        prevLeft2EncoderPosition = robot.leftDrive2.getCurrentPosition();
+        prevRightEncoderPosition = robot.rightDrive.getCurrentPosition();
+        prevRight2EncoderPosition = robot.rightDrive2.getCurrentPosition();
     }
 
     /*
@@ -110,6 +125,25 @@ public class CardbotTeleopTank_Iterative extends OpMode {
 
         left = -gamepad1.left_stick_y;
         right = -gamepad1.right_stick_y;
+        /*
+        // Compute speed of left,right motors.
+        double deltaTime = time - prevTime;
+        double leftSpeed = (robot.leftDrive.getCurrentPosition() - prevLeftEncoderPosition) /
+                deltaTime;
+        double rightSpeed = (robot.rightDrive.getCurrentPosition() - prevRightEncoderPosition) /
+                deltaTime;
+        double leftSpeed2 = (robot.leftDrive2.getCurrentPosition() - prevLeftEncoderPosition) /
+                deltaTime;
+        double rightSpeed2 = (robot.rightDrive2.getCurrentPosition() - prevRightEncoderPosition) /
+                deltaTime;
+        // Track last loop() values.
+        prevTime = time;
+        prevLeftEncoderPosition = robot.leftDrive.getCurrentPosition();
+        prevRightEncoderPosition = robot.rightDrive.getCurrentPosition();
+        prevLeft2EncoderPosition = robot.leftDrive2.getCurrentPosition();
+        prevRight2EncoderPosition = robot.rightDrive2.getCurrentPosition();
+        */
+
         if(gamepad1.right_trigger <= 0) { // Right trigger not pressed, full speed
             left = Range.clip(left, -1, 1);
             right = Range.clip(right, -1, 1);

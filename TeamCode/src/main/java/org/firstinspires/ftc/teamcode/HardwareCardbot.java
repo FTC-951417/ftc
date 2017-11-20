@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -53,6 +54,8 @@ public class HardwareCardbot
     public Servo rightClaw = null;
     public Servo sensorArm = null;
 
+    public BNO055IMU imu;
+
 
     public NormalizedColorSensor cs = null;
 
@@ -70,7 +73,7 @@ public class HardwareCardbot
 
         cs = hwMap.get(NormalizedColorSensor.class, "cs");
         sensorArm = hwMap.get(Servo.class, "servoarm");
-
+        imu = hwMap.get(BNO055IMU.class, "imu");
 
         leftDrive  = hwMap.get(DcMotor.class, "ld"); // Left Drive
         rightDrive = hwMap.get(DcMotor.class, "rd"); // Right Drive
@@ -108,10 +111,10 @@ public class HardwareCardbot
         leftDrive2.setPower(0);
         rightDrive2.setPower(0);
 
-        leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftDrive2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightDrive2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftDrive2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightDrive2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         flipArm.setPower(0);
         mainArm.setPower(0);
@@ -144,7 +147,7 @@ public class HardwareCardbot
     }
 
     /** Reverse direction of all four motors at once **/
-    public void reverseAll(){
+    public void reverseAll() {
         Direction motorCurDir = leftDrive.getDirection();
         if(motorCurDir == Direction.FORWARD) {
             leftDrive.setDirection(Direction.REVERSE);
@@ -159,6 +162,40 @@ public class HardwareCardbot
             leftDrive2.setDirection(Direction.FORWARD);
         }
 
+        Direction motorCurDir3 = rightDrive.getDirection();
+        if(motorCurDir3 == Direction.FORWARD) {
+            rightDrive.setDirection(Direction.REVERSE);
+        } else {
+            rightDrive.setDirection(Direction.FORWARD);
+        }
+
+        Direction motorCurDir4 = rightDrive2.getDirection();
+        if(motorCurDir4 == Direction.FORWARD) {
+            rightDrive2.setDirection(Direction.REVERSE);
+        } else {
+            rightDrive2.setDirection(Direction.FORWARD);
+        }
+    }
+
+    public void reverseLeft() {
+        Direction motorCurDir = leftDrive.getDirection();
+        if(motorCurDir == Direction.FORWARD) {
+            leftDrive.setDirection(Direction.REVERSE);
+        } else {
+            leftDrive.setDirection(Direction.FORWARD);
+        }
+
+        Direction motorCurDir2 = leftDrive2.getDirection();
+        if(motorCurDir2 == Direction.FORWARD) {
+            leftDrive2.setDirection(Direction.REVERSE);
+        } else {
+            leftDrive2.setDirection(Direction.FORWARD);
+        }
+
+
+    }
+
+    public void reverseRight() {
         Direction motorCurDir3 = rightDrive.getDirection();
         if(motorCurDir3 == Direction.FORWARD) {
             rightDrive.setDirection(Direction.REVERSE);

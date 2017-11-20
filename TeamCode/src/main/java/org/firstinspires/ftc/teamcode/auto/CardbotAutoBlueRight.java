@@ -320,7 +320,7 @@ public class CardbotAutoBlueRight extends LinearOpMode {
         telemetry.update();
     }
 
-    public double diameter = 16;
+    public double diameter = 16.25;
     public double circumference = diameter * Math.PI;
 
     public double degreesToInches(int degrees) {
