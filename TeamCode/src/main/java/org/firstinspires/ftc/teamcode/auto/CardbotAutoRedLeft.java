@@ -270,7 +270,7 @@ public class CardbotAutoRedLeft extends LinearOpMode {
 
         robot.mainArm.setPower(0);
 
-        encoderDrive(0.3, 35, 45, 5);
+        encoderDrive(0.3, 35, 75, 5);
 
         sleep(1000); // Wait for motors to come to rest
 
@@ -286,36 +286,44 @@ public class CardbotAutoRedLeft extends LinearOpMode {
 
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
-            encoderDrive(1, 10, 5.0);
+            encoderDrive(1, 14, 5.0);
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
 
             encoderDrive(0.5,24,22,5.0);
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.LEFT) {
-            //Turn Left 10 inches
+            encoderDrive(0.5, -8, 5.0);
 
-            HardwareCardbot.reverse(robot.leftDrive);
-            HardwareCardbot.reverse(robot.leftDrive2);
-            encoderDrive(1, 14, 5.0);
-            HardwareCardbot.reverse(robot.leftDrive);
-            HardwareCardbot.reverse(robot.leftDrive2);
-            encoderDrive(0.5,26, 5.0);
+
+
+            encoderDrive(0.5,8, 5.0);
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.RIGHT) {
             //Turn Left 3 inches
 
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
-            encoderDrive(1, 3, 5.0);
+            encoderDrive(1, 6, 5.0);
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
 
             encoderDrive(0.5,20,5.0);
+            HardwareCardbot.reverse(robot.rightDrive);
+            HardwareCardbot.reverse(robot.rightDrive2);
+            encoderDrive(1, 6, 5.0);
+            HardwareCardbot.reverse(robot.rightDrive);
+            HardwareCardbot.reverse(robot.rightDrive2);HardwareCardbot.reverse(robot.rightDrive);
+            HardwareCardbot.reverse(robot.rightDrive2);
+            encoderDrive(1, 6, 5.0);
+            HardwareCardbot.reverse(robot.rightDrive);
+            HardwareCardbot.reverse(robot.rightDrive2);
+
+            encoderDrive(0.5, 10, 5.0);
         }
         robot.leftClaw.setPosition(LEFT_OPEN);
         robot.rightClaw.setPosition(RIGHT_OPEN);
-        //encoderDrive(0.5, -3, 5.0); Keeps glyph in place better
+        encoderDrive(0.5, -3, 5.0);
 
 
 

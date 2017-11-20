@@ -286,7 +286,7 @@ public class CardbotAutoRedRight extends LinearOpMode {
 
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
-            encoderDrive(1, dirId == 2 ? 7 : 8, 5.0);
+            encoderDrive(1, 6, 5.0);
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
 
@@ -297,7 +297,7 @@ public class CardbotAutoRedRight extends LinearOpMode {
 
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
-            encoderDrive(1, 10, 5.0);
+            encoderDrive(1, 8, 5.0);
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
             encoderDrive(0.5,26, 5.0);
@@ -307,7 +307,7 @@ public class CardbotAutoRedRight extends LinearOpMode {
 
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
-            encoderDrive(1, 3, 5.0);
+            encoderDrive(1, 2, 5.0);
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
 
@@ -315,8 +315,7 @@ public class CardbotAutoRedRight extends LinearOpMode {
         }
         robot.leftClaw.setPosition(LEFT_OPEN);
         robot.rightClaw.setPosition(RIGHT_OPEN);
-        //encoderDrive(0.5, -3, 5.0); Keeps glyph in place better
-
+        encoderDrive(1, -2, 5.0);
 
 
         telemetry.addData("Path", "Complete");

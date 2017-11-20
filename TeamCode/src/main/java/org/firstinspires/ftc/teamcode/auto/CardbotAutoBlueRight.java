@@ -388,7 +388,7 @@ public class CardbotAutoBlueRight extends LinearOpMode {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
-                    (robot.leftDrive.isBusy() || robot.rightDrive.isBusy() || robot.leftDrive2.isBusy() || robot.rightDrive2.isBusy())) {
+                    (robot.leftDrive.isBusy() && robot.rightDrive.isBusy() && robot.leftDrive2.isBusy() && robot.rightDrive2.isBusy())) {
 
                 // Display it for the driver.
                 telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);

@@ -135,8 +135,8 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         double distanceFromMid = 0.05;
         rgrip = Range.clip(rgrip, 0, 0.5 - distanceFromMid); // Stop arm from crushing itself
         lgrip = Range.clip(lgrip, 0.5 + distanceFromMid, 1); // * ^   ^    ^     ^       ^
-        rgrip = Range.clip(rgrip, 0.1, 1); // Stop arm from crushing itself
-        lgrip = Range.clip(lgrip, 0.1, 1); // * ^   ^    ^     ^       ^
+        rgrip = Range.clip(rgrip, 0, 1); // Stop arm from crushing itself
+        lgrip = Range.clip(lgrip, 0, 1); // * ^   ^    ^     ^       ^
         robot.leftClaw.setPosition(lgrip);
         robot.rightClaw.setPosition(rgrip);
 
@@ -163,7 +163,8 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         // Telemetry
         telemetry.addData("Left Power", left);
         telemetry.addData("Right Power", right);
-        telemetry.addData("Grip", "%" + String.valueOf(lgrip * 312.5));
+        telemetry.addData("Left Grip", lgrip);
+        telemetry.addData("Right Grip", rgrip);
         telemetry.addData("Mode", diagMode ? "Diagonal" : "Strafe");
         //telemetry.addData("Arm Mode", isBraked ? "Brake" : "Free (WARNING! PLEASE RESET TO BRAKE WITH B on G2)");
         telemetry.update();
