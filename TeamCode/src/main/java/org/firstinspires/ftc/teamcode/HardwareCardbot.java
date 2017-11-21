@@ -52,9 +52,16 @@ public class HardwareCardbot
 
     public Servo leftClaw = null;
     public Servo rightClaw = null;
+    public Servo leftClaw2 = null;
+    public Servo rightClaw2 = null;
     public Servo sensorArm = null;
 
     public BNO055IMU imu;
+
+    public double LEFT_OPEN = 0;
+    public double LEFT_CLOSED = 0.45;
+    public double RIGHT_OPEN = 1;
+    public double RIGHT_CLOSED = 0.55;
 
 
     public NormalizedColorSensor cs = null;
@@ -93,6 +100,8 @@ public class HardwareCardbot
 
         leftClaw = hwMap.get(Servo.class, "lc");
         rightClaw = hwMap.get(Servo.class, "rc");
+        leftClaw2 = hwMap.get(Servo.class, "lc2");
+        rightClaw2 = hwMap.get(Servo.class, "rc2");
 
 
         /*       * ROBOT OUTLINE *
@@ -125,15 +134,15 @@ public class HardwareCardbot
         flipArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mainArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        double LEFT_OPEN = 0.45;
-        double LEFT_CLOSED = 1;
-        double RIGHT_OPEN = 0.45;
-        double RIGHT_CLOSED = 0;
+
 
         leftClaw.setPosition(LEFT_OPEN);
         rightClaw.setPosition(RIGHT_OPEN);
+        leftClaw2.setPosition(LEFT_OPEN);
+        rightClaw2.setPosition(RIGHT_OPEN);
 
-        sensorArm.setPosition(0);
+
+        sensorArm.setPosition(0.35);
     }
 
 

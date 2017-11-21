@@ -144,12 +144,9 @@ public class CardbotAutoRedLeft extends LinearOpMode {
 
 
 
-        double LEFT_OPEN = 0.45;
-        double LEFT_CLOSED = 1;
-        double RIGHT_OPEN = 0.45;
-        double RIGHT_CLOSED = 0;
-        robot.leftClaw.setPosition (LEFT_CLOSED);
-        robot.rightClaw.setPosition (RIGHT_CLOSED);
+
+        robot.leftClaw.setPosition (robot.LEFT_CLOSED);
+        robot.rightClaw.setPosition (robot.RIGHT_CLOSED);
 
 
 
@@ -160,7 +157,7 @@ public class CardbotAutoRedLeft extends LinearOpMode {
 
         robot.sensorArm.setPosition(1);
         sleep(1500); // Wait for arm to move!
-        //robot.sensorArm.setPosition(0);
+        //robot.sensorArm.setPosition(0.35);
 
         int dirId = 0;
         while(colors == null && opModeIsActive()){
@@ -188,7 +185,7 @@ public class CardbotAutoRedLeft extends LinearOpMode {
                 encoderDrive(0.2, 3, 3, 5.0);
 
             }
-            robot.sensorArm.setPosition(0);
+            robot.sensorArm.setPosition(0.35);
             dirId = 2;
         }
         if(colors.blue > colors.red) {
@@ -198,7 +195,7 @@ public class CardbotAutoRedLeft extends LinearOpMode {
                 encoderDrive(0.2, -3, -3, 5.0);
 
             }
-            robot.sensorArm.setPosition(0);
+            robot.sensorArm.setPosition(0.35);
             dirId = 1;
         }
 
@@ -321,8 +318,8 @@ public class CardbotAutoRedLeft extends LinearOpMode {
 
             encoderDrive(0.5, 10, 5.0);
         }
-        robot.leftClaw.setPosition(LEFT_OPEN);
-        robot.rightClaw.setPosition(RIGHT_OPEN);
+        robot.leftClaw.setPosition(robot.LEFT_OPEN);
+        robot.rightClaw.setPosition(robot.RIGHT_OPEN);
         encoderDrive(0.5, -3, 5.0);
 
 

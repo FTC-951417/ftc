@@ -144,7 +144,7 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         prevRight2EncoderPosition = robot.rightDrive2.getCurrentPosition();
         */
 
-        if(gamepad1.right_trigger <= 0) { // Right trigger not pressed, full speed
+        if(gamepad1.right_trigger <= 0.2) { // Right trigger not pressed, full speed
             left = Range.clip(left, -1, 1);
             right = Range.clip(right, -1, 1);
         } else {  // ~1/3 speed, right trigger is pressed
@@ -167,12 +167,12 @@ public class CardbotTeleopTank_Iterative extends OpMode {
             rgrip -= 0.02; // Right grip is reversed, 1 on right is 0 on left, etc.
         }
         double distanceFromMid = 0.05;
-        rgrip = Range.clip(rgrip, 0, 0.5 - distanceFromMid); // Stop arm from crushing itself
-        lgrip = Range.clip(lgrip, 0.5 + distanceFromMid, 1); // * ^   ^    ^     ^       ^
-        rgrip = Range.clip(rgrip, 0, 1); // Stop arm from crushing itself
-        lgrip = Range.clip(lgrip, 0, 1); // * ^   ^    ^     ^       ^
+        rgrip = Range.clip(rgrip, 0.55, 1); // Stop arm from crushing itself
+        lgrip = Range.clip(lgrip, 0, 0.45); // * ^   ^    ^     ^       ^
         robot.leftClaw.setPosition(lgrip);
         robot.rightClaw.setPosition(rgrip);
+        robot.leftClaw2.setPosition(lgrip);
+        robot.rightClaw2.setPosition(rgrip);
 
         // Arm Functions
 
@@ -217,7 +217,7 @@ public class CardbotTeleopTank_Iterative extends OpMode {
     }
 
     /* Range functions */
-
+    @SuppressWarnings("unused")
     public static boolean isNotInRangeExcludes(double in, double min, double max) {
         return in < min && in > max;
     }

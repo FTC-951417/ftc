@@ -144,12 +144,9 @@ public class CardbotAutoBlueRight extends LinearOpMode {
 
 
 
-        double LEFT_OPEN = 0.45;
-        double LEFT_CLOSED = 1;
-        double RIGHT_OPEN = 0.45;
-        double RIGHT_CLOSED = 0;
-        robot.leftClaw.setPosition (LEFT_CLOSED);  //CLOSE CLAWS
-        robot.rightClaw.setPosition (RIGHT_CLOSED);
+
+        robot.leftClaw.setPosition (robot.LEFT_CLOSED);  //CLOSE CLAWS
+        robot.rightClaw.setPosition (robot.RIGHT_CLOSED);
 
 
 
@@ -157,7 +154,7 @@ public class CardbotAutoBlueRight extends LinearOpMode {
 
         robot.sensorArm.setPosition(1);   // Put down arm for color reading
         sleep(1500); // Wait for arm to move!
-        //robot.sensorArm.setPosition(0);
+        //robot.sensorArm.setPosition(0.35);
 
         int dirId = 0;
         while(colors == null && opModeIsActive()){
@@ -186,7 +183,7 @@ public class CardbotAutoBlueRight extends LinearOpMode {
                 robot.reverseAll();
 
             }
-            robot.sensorArm.setPosition(0);
+            robot.sensorArm.setPosition(0.35);
             dirId = 1;
         }
         if(colors.blue > colors.red) {
@@ -196,7 +193,7 @@ public class CardbotAutoBlueRight extends LinearOpMode {
                 encoderDrive(0.2, 4, 4, 5.0);
 
             }
-            robot.sensorArm.setPosition(0);
+            robot.sensorArm.setPosition(0.35);
             dirId = 2;
         }
 
@@ -310,8 +307,8 @@ public class CardbotAutoBlueRight extends LinearOpMode {
 
             encoderDrive(0.5, 3, 5.0); // Go forward 22in
         }
-        robot.leftClaw.setPosition(LEFT_OPEN);
-        robot.rightClaw.setPosition(RIGHT_OPEN);  // Open claw to free glyph
+        robot.leftClaw.setPosition(robot.LEFT_OPEN);
+        robot.rightClaw.setPosition(robot.RIGHT_OPEN);  // Open claw to free glyph
         //encoderDrive(0.5, -3, 5.0); Keeps glyph in place better
 
 
