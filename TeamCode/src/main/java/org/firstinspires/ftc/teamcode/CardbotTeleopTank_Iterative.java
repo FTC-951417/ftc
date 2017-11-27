@@ -158,17 +158,17 @@ public class CardbotTeleopTank_Iterative extends OpMode {
 
         if (gamepad2.left_trigger > 0.1) {
             // Reduce grip
-            lgrip -= 0.02;
-            rgrip += 0.02; // Right grip is reversed, 1 on right is 0 on left, etc.
+            lgrip -= 0.03;
+            rgrip += 0.03; // Right grip is reversed, 1 on right is 0 on left, etc.
         }
         if (gamepad2.right_trigger > 0.1) {
             // Increase grip
-            lgrip += 0.02;
-            rgrip -= 0.02; // Right grip is reversed, 1 on right is 0 on left, etc.
+            lgrip += 0.03;
+            rgrip -= 0.03; // Right grip is reversed, 1 on right is 0 on left, etc.
         }
         double distanceFromMid = 0.05;
-        rgrip = Range.clip(rgrip, 0.55, 1); // Stop arm from crushing itself
-        lgrip = Range.clip(lgrip, 0, 0.45); // * ^   ^    ^     ^       ^
+        rgrip = Range.clip(rgrip, 0.4, 1); // Stop arm from crushing itself
+        lgrip = Range.clip(lgrip, 0, 0.6); // * ^   ^    ^     ^       ^
         robot.leftClaw.setPosition(lgrip);
         robot.rightClaw.setPosition(rgrip);
         robot.leftClaw2.setPosition(lgrip);

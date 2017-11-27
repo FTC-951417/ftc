@@ -59,9 +59,9 @@ public class HardwareCardbot
     public BNO055IMU imu;
 
     public double LEFT_OPEN = 0;
-    public double LEFT_CLOSED = 0.45;
+    public double LEFT_CLOSED = 0.6;
     public double RIGHT_OPEN = 1;
-    public double RIGHT_CLOSED = 0.55;
+    public double RIGHT_CLOSED = 0.4;
 
 
     public NormalizedColorSensor cs = null;
@@ -81,7 +81,6 @@ public class HardwareCardbot
         cs = hwMap.get(NormalizedColorSensor.class, "cs");
         sensorArm = hwMap.get(Servo.class, "servoarm");
         imu = hwMap.get(BNO055IMU.class, "imu");
-
         leftDrive  = hwMap.get(DcMotor.class, "ld"); // Left Drive
         rightDrive = hwMap.get(DcMotor.class, "rd"); // Right Drive
         leftDrive2 = hwMap.get(DcMotor.class, "ld2"); // Left Drive 2
