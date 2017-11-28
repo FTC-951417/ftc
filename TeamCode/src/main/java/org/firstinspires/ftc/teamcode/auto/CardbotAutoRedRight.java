@@ -43,7 +43,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -66,7 +68,7 @@ public class CardbotAutoRedRight extends AutoBase {
         initOpMode();
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        startIMU();
+        //robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
 
 
@@ -82,7 +84,8 @@ public class CardbotAutoRedRight extends AutoBase {
 
 
         robot.sensorArm.setPosition(1);
-        sleep(1500); // Wait for arm to move!
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 1.5)) {} // Wait for arm to move!
         //robot.sensorArm.setPosition(0.35);
 
         int dirId = 0;
@@ -102,7 +105,8 @@ public class CardbotAutoRedRight extends AutoBase {
             }
         }
 
-        sleep(500);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 0.5)) {}
 
         if(colors.red > colors.blue) {
             robot.sensorArm.setPosition(1);
@@ -137,7 +141,8 @@ public class CardbotAutoRedRight extends AutoBase {
             requestOpModeStop(); // Error
         }
 
-        sleep(500);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 0.5)) {}
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -193,25 +198,9 @@ public class CardbotAutoRedRight extends AutoBase {
 
         robot.mainArm.setPower(0);
 
-        encoderDrive(0.3, 10, 5);
-
-        sleep(1000); // Wait for motors to come to rest
-        double offsetYaw = 0 - getYaw();
-        if(offsetYaw < 0) {
-            while(opModeIsActive() && !CardbotTeleopTank_Iterative.isInRangeIncludes(getYaw(), -1, 1)) {
-                setLeft(-0.2);
-                setRight(0.2);
-            }
-            setLeft(0);
-            setRight(0);
-        } else if(offsetYaw > 0) {
-            while(opModeIsActive() && !CardbotTeleopTank_Iterative.isInRangeIncludes(getYaw(), -1, 1)) {
-                setLeft(0.2);
-                setRight(-0.2);
-            }
-            setLeft(0);
-            setRight(0);
-        }
+        encoderDrive(0.3, 26, 5);
+        runtime.reset();
+        turnToDegree(0.3, 0);
 
 
 
@@ -224,13 +213,11 @@ public class CardbotAutoRedRight extends AutoBase {
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
             */
-            while(opModeIsActive() && getYaw() < -15) {
-                setLeft(-0.2);
-                setRight(0.2);
-            }
+            turnToDegree(0.3, 45);
             setLeft(0);
             setRight(0);
-            encoderDrive(0.5,24,22,5.0);
+            encoderDrive(0.5,24,5.0);
+
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.LEFT) {
             /*//Turn Left 10 inches
@@ -251,7 +238,7 @@ public class CardbotAutoRedRight extends AutoBase {
             encoderDrive(0.5,26, 5.0);
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.RIGHT) {
-            //Turn Left 3 inches
+            /*//Turn Left 3 inches
 
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
@@ -259,7 +246,14 @@ public class CardbotAutoRedRight extends AutoBase {
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
 
-            encoderDrive(0.5,20,5.0);
+            encoderDrive(0.5,20,5.0);*/
+            double yaw = getYaw();
+            boolean left = true;
+            boolean switchDirection = false;
+            turnToDegree(0.3, 20);
+            setLeft(0);
+            setRight(0);
+            encoderDrive(0.5,14,13,5.0);
         }
         robot.leftClaw.setPosition(robot.LEFT_OPEN);
         robot.rightClaw.setPosition(robot.RIGHT_OPEN);
@@ -269,6 +263,9 @@ public class CardbotAutoRedRight extends AutoBase {
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
+
+
+
 
 }
 

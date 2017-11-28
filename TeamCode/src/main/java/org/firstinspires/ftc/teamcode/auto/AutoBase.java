@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -21,6 +22,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.teamcode.Alliance;
+import org.firstinspires.ftc.teamcode.CardbotTeleopTank_Iterative;
 import org.firstinspires.ftc.teamcode.HardwareCardbot;
 
 import java.util.Locale;
@@ -28,6 +30,8 @@ import java.util.Locale;
 /**
  * Created by 9514 on 11/27/2017.
  */
+
+
 
 public class AutoBase extends LinearOpMode {
 
@@ -45,6 +49,9 @@ public class AutoBase extends LinearOpMode {
     static final double     WHEEL_DIAMETER_INCHES_ARM   = 1.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH_ARM         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * Math.PI);
+
+    static final double     HEADING_THRESHOLD       = 1;       // As tight as we can make it with an integer gyro
+    static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
 
     public NormalizedRGBA colors;
     static final double     DRIVE_SPEED             = 0.6;
@@ -91,7 +98,7 @@ public class AutoBase extends LinearOpMode {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode //TODO: Calibration!
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
         parameters.loggingEnabled      = true;
         parameters.loggingTag          = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
@@ -103,9 +110,7 @@ public class AutoBase extends LinearOpMode {
 
     }
 
-    public void startIMU() {
-        robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-    }
+
 
     public void runOpMode(){}
 
@@ -408,6 +413,111 @@ public class AutoBase extends LinearOpMode {
     public double getYaw() {
         angles   = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return Double.parseDouble(formatAngle(angles.angleUnit, angles.firstAngle));
+    }
+
+    public boolean isNear(double var, double target, double errorMargin) {
+        return CardbotTeleopTank_Iterative.isInRangeIncludes(var, target - errorMargin, target + errorMargin);
+    }
+    /*
+    public void turnToDegree(double speed, double degreeTarget) {
+        double yaw = getYaw();
+        boolean left = true;
+        boolean switchDirection = false;
+        while(opModeIsActive() && isNear(yaw, degreeTarget, 3)) { //Yaw is within 3 degrees of -15 (eg. -12 to -18)
+            telemetry.addData("Yaw", yaw);
+            telemetry.update();
+            setLeft(left ? -speed : speed);
+            setRight(left ? speed : -speed);
+            if(yaw > degreeTarget && left) {
+                switchDirection = true;
+            }
+            if(!left && getYaw() < degreeTarget) {
+                switchDirection = true;
+            }
+            if(switchDirection) {
+                left = left ? false : true;
+                switchDirection = false;
+            }
+            yaw = getYaw();
+        }
+        setLeft(0);
+        setRight(0);
+    }*/
+
+    public void turnToDegree(  double speed, double angle) {
+
+        // keep looping while we are still active, and not on heading.
+        while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
+            // Update telemetry & Allow time for other processes to run.
+            telemetry.update();
+        }
+    }
+
+
+
+    /**
+     * Perform one cycle of closed loop heading control.
+     *
+     * @param speed     Desired speed of turn.
+     * @param angle     Absolute Angle (in Degrees) relative to last gyro reset.
+     *                  0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
+     *                  If a relative angle is required, add/subtract from current heading.
+     * @param PCoeff    Proportional Gain coefficient
+     * @return
+     */
+    boolean onHeading(double speed, double angle, double PCoeff) {
+        double   error ;
+        double   steer ;
+        boolean  onTarget = false ;
+        double leftSpeed;
+        double rightSpeed;
+
+        // determine turn power based on +/- error
+        error = getError(angle);
+
+        if (Math.abs(error) <= HEADING_THRESHOLD) {
+            steer = 0.0;
+            leftSpeed  = 0.0;
+            rightSpeed = 0.0;
+            onTarget = true;
+        }
+        else {
+            steer = getSteer(error, PCoeff);
+            rightSpeed  = speed * steer;
+            leftSpeed   = -rightSpeed;
+        }
+
+        // Send desired speeds to motors.
+        robot.leftDrive.setPower(leftSpeed);
+        robot.rightDrive.setPower(rightSpeed);
+
+        // Display it for the driver.
+        telemetry.addData("Target", "%5.2f", angle);
+        telemetry.addData("Err/St", "%5.2f/%5.2f", error, steer);
+        telemetry.addData("Speed.", "%5.2f:%5.2f", leftSpeed, rightSpeed);
+
+        return onTarget;
+    }
+
+    /**
+     * getError determines the error between the target angle and the robot's current heading
+     * @param   targetAngle  Desired angle (relative to global reference established at last Gyro Reset).
+     * @return  error angle: Degrees in the range +/- 180. Centered on the robot's frame of reference
+     *          +ve error means the robot should turn LEFT (CCW) to reduce error.
+     */
+    public double getError(double targetAngle) {
+
+        double robotError;
+
+        // calculate error in -179 to +180 range  (
+        robotError = targetAngle - getYaw();
+        while (robotError > 180)  robotError -= 360;
+        while (robotError <= -180) robotError += 360;
+        return robotError;
+    }
+
+    public double getSteer(double error, double PCoeff) {
+        return Range.clip(error * PCoeff, -1, 1);
     }
 
 }
