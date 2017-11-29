@@ -68,15 +68,13 @@ public class CardbotAutoRedRight extends AutoBase {
         initOpMode();
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        //robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+        robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
 
 
 
         robot.leftClaw.setPosition (robot.LEFT_CLOSED);
         robot.rightClaw.setPosition (robot.RIGHT_CLOSED);
-
-
 
 
 
@@ -112,7 +110,7 @@ public class CardbotAutoRedRight extends AutoBase {
             robot.sensorArm.setPosition(1);
             { // Turn Left (FORWARD)
 
-                encoderDrive(0.2, 3, 3, 5.0);
+                encoderDrive(0.1, 3, 3, 5.0);
 
             }
             robot.sensorArm.setPosition(0.35);
@@ -122,7 +120,7 @@ public class CardbotAutoRedRight extends AutoBase {
             robot.sensorArm.setPosition(1);
             { // Turn Right (BACKWARD)
 
-                encoderDrive(0.2, -3, -3, 5.0);
+                encoderDrive(0.1, -3, -3, 5.0);
 
             }
             robot.sensorArm.setPosition(0.35);
@@ -131,11 +129,11 @@ public class CardbotAutoRedRight extends AutoBase {
 
         if(dirId == 2) { // Turn Right (BACKWARD)
 
-            encoderDrive(0.2, -3, -3, 5.0);
+            encoderDrive(0.1, -3, -3, 5.0);
 
         } else if(dirId == 1) { // Turn Left (FORWARD)
 
-            encoderDrive(0.2, 3, 3, 5.0);
+            encoderDrive(0.1, 3, 3, 5.0);
 
         } else {
             requestOpModeStop(); // Error
@@ -190,6 +188,25 @@ public class CardbotAutoRedRight extends AutoBase {
             vuMarkAnswer = RelicRecoveryVuMark.RIGHT;
         }
 
+        telemetry.addData("Choose", "DPAD Right = Right, DPAD Up or Down = CENTER, DPAD Left = Left");
+        telemetry.update();
+
+        boolean done = false;
+        while(!done) {
+            if (gamepad1.dpad_right) {
+                vuMarkAnswer = RelicRecoveryVuMark.RIGHT;
+                done = true;
+            }
+            if (gamepad1.dpad_up || gamepad1.dpad_down) {
+                vuMarkAnswer = RelicRecoveryVuMark.CENTER;
+                done = true;
+            }
+            if (gamepad1.dpad_left) {
+                vuMarkAnswer = RelicRecoveryVuMark.LEFT;
+                done = true;
+            }
+        }
+
         robot.mainArm.setPower(-0.8);  // Move arm up so it doesn't create friction
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 0.3)) {}
@@ -197,9 +214,11 @@ public class CardbotAutoRedRight extends AutoBase {
         robot.mainArm.setPower(0);  // Stop moving arm after 800ms
 
         robot.mainArm.setPower(0);
-
+        turnToDegree(0.3, 5);
+        while (opModeIsActive() && (runtime.seconds() < 0.5)) {}
         encoderDrive(0.3, 26, 5);
         runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 1)) {}
         turnToDegree(0.3, 0);
 
 
@@ -213,7 +232,7 @@ public class CardbotAutoRedRight extends AutoBase {
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
             */
-            turnToDegree(0.3, 45);
+            turnToDegree(0.3, 48);
             setLeft(0);
             setRight(0);
             encoderDrive(0.5,24,5.0);
@@ -228,14 +247,9 @@ public class CardbotAutoRedRight extends AutoBase {
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);*/
 
-            while(opModeIsActive() && getYaw() < -40) {
-                setLeft(-0.2);
-                setRight(0.2);
-            }
-            setLeft(0);
-            setRight(0);
+            turnToDegree(0.3, 60);
 
-            encoderDrive(0.5,26, 5.0);
+            encoderDrive(0.5,28, 5.0);
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.RIGHT) {
             /*//Turn Left 3 inches
@@ -247,13 +261,8 @@ public class CardbotAutoRedRight extends AutoBase {
             HardwareCardbot.reverse(robot.leftDrive2);
 
             encoderDrive(0.5,20,5.0);*/
-            double yaw = getYaw();
-            boolean left = true;
-            boolean switchDirection = false;
-            turnToDegree(0.3, 20);
-            setLeft(0);
-            setRight(0);
-            encoderDrive(0.5,14,13,5.0);
+            turnToDegree(0.3, 30);
+            encoderDrive(0.5,15,5.0);
         }
         robot.leftClaw.setPosition(robot.LEFT_OPEN);
         robot.rightClaw.setPosition(robot.RIGHT_OPEN);

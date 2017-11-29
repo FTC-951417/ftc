@@ -445,9 +445,9 @@ public class AutoBase extends LinearOpMode {
     }*/
 
     public void turnToDegree(  double speed, double angle) {
-
+        runtime.reset();
         // keep looping while we are still active, and not on heading.
-        while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
+        while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF) && runtime.seconds() < 5.0) {
             // Update telemetry & Allow time for other processes to run.
             telemetry.update();
         }

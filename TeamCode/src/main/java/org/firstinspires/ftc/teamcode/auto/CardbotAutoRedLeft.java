@@ -71,7 +71,8 @@ public class CardbotAutoRedLeft extends AutoBase {
 
 
         robot.sensorArm.setPosition(1);
-        sleep(1500); // Wait for arm to move!
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 1.5)) {} // Wait for arm to move!
         //robot.sensorArm.setPosition(0.35);
 
         int dirId = 0;
@@ -91,13 +92,14 @@ public class CardbotAutoRedLeft extends AutoBase {
             }
         }
 
-        sleep(500);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 0.5)) {}
 
         if(colors.red > colors.blue) {
             robot.sensorArm.setPosition(1);
             { // Turn Left (FORWARD)
 
-                encoderDrive(0.2, 3, 3, 5.0);
+                encoderDrive(0.1, 3, 3, 5.0);
 
             }
             robot.sensorArm.setPosition(0.35);
@@ -107,7 +109,7 @@ public class CardbotAutoRedLeft extends AutoBase {
             robot.sensorArm.setPosition(1);
             { // Turn Right (BACKWARD)
 
-                encoderDrive(0.2, -3, -3, 5.0);
+                encoderDrive(0.1, -3, -3, 5.0);
 
             }
             robot.sensorArm.setPosition(0.35);
@@ -116,17 +118,18 @@ public class CardbotAutoRedLeft extends AutoBase {
 
         if(dirId == 2) { // Turn Right (BACKWARD)
 
-            encoderDrive(0.2, -3, -3, 5.0);
+            encoderDrive(0.1, -3, -3, 5.0);
 
         } else if(dirId == 1) { // Turn Left (FORWARD)
 
-            encoderDrive(0.2, 3, 3, 5.0);
+            encoderDrive(0.1, 3, 3, 5.0);
 
         } else {
             requestOpModeStop(); // Error
         }
 
-        sleep(500);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 0.5)) {}
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -174,6 +177,25 @@ public class CardbotAutoRedLeft extends AutoBase {
             vuMarkAnswer = RelicRecoveryVuMark.RIGHT;
         }
 
+        telemetry.addData("Choose", "DPAD Right = Right, DPAD Up or Down = CENTER, DPAD Left = Left");
+        telemetry.update();
+
+        boolean done = false;
+        while(!done) {
+            if (gamepad1.dpad_right) {
+                vuMarkAnswer = RelicRecoveryVuMark.RIGHT;
+                done = true;
+            }
+            if (gamepad1.dpad_up || gamepad1.dpad_down) {
+                vuMarkAnswer = RelicRecoveryVuMark.CENTER;
+                done = true;
+            }
+            if (gamepad1.dpad_left) {
+                vuMarkAnswer = RelicRecoveryVuMark.LEFT;
+                done = true;
+            }
+        }
+
         robot.mainArm.setPower(-0.8);  // Move arm up so it doesn't create friction
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 0.3)) {}
@@ -186,11 +208,12 @@ public class CardbotAutoRedLeft extends AutoBase {
 
         sleep(1000); // Wait for motors to come to rest
 
-        HardwareCardbot.reverse(robot.rightDrive);
-        HardwareCardbot.reverse(robot.rightDrive2);
-        encoderDrive(0.5, 22, 5.0);
-        HardwareCardbot.reverse(robot.rightDrive);
-        HardwareCardbot.reverse(robot.rightDrive2);
+        turnToDegree(0.3, 5);
+        while (opModeIsActive() && (runtime.seconds() < 0.5)) {}
+        encoderDrive(0.3, 26, 5);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 1)) {}
+        turnToDegree(0.3, 0);
 
 
         if(vuMarkAnswer == RelicRecoveryVuMark.CENTER) {
