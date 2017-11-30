@@ -189,7 +189,7 @@ public class CardbotAutoBlueLeft extends LinearOpMode {
             robot.sensorArm.setPosition(1);
             { // Turn Right (BACKWARD)
                 robot.reverseAll();
-                encoderDrive(0.2, 3, 3, 5.0);
+                encoderDrive(0.2, 4, 4, 5.0);
                 robot.reverseAll();
             }
             robot.sensorArm.setPosition(0);

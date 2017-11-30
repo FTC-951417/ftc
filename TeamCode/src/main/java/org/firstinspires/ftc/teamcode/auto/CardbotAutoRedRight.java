@@ -189,7 +189,7 @@ public class CardbotAutoRedRight extends LinearOpMode {
             robot.sensorArm.setPosition(1);
             { // Turn Left (FORWARD)
 
-                encoderDrive(0.2, 3, 3, 5.0);
+                encoderDrive(0.2, 4, 5.0);
 
             }
             robot.sensorArm.setPosition(0);
@@ -199,7 +199,7 @@ public class CardbotAutoRedRight extends LinearOpMode {
             robot.sensorArm.setPosition(1);
             { // Turn Right (BACKWARD)
 
-                encoderDrive(0.2, -3, -3, 5.0);
+                encoderDrive(0.2, -4, 5.0);
 
             }
             robot.sensorArm.setPosition(0);
@@ -208,11 +208,11 @@ public class CardbotAutoRedRight extends LinearOpMode {
 
         if(dirId == 2) { // Turn Right (BACKWARD)
 
-            encoderDrive(0.2, -3, -3, 5.0);
+            encoderDrive(0.2, -4, 5.0);
 
         } else if(dirId == 1) { // Turn Left (FORWARD)
 
-            encoderDrive(0.2, 3, 3, 5.0);
+            encoderDrive(0.2, 4, 5.0);
 
         } else {
             requestOpModeStop(); // Error
