@@ -213,12 +213,17 @@ public class CardbotAutoRedRight extends AutoBase {
 
         robot.mainArm.setPower(0);  // Stop moving arm after 800ms
 
-        robot.mainArm.setPower(0);
-        turnToDegree(0.3, 5);
+
+        turnToDegree(0.3, 0);
+
+        runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 0.5)) {}
+
         encoderDrive(0.3, 26, 5);
+
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 1)) {}
+
         turnToDegree(0.3, 0);
 
 
