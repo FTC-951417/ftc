@@ -219,7 +219,7 @@ public class CardbotAutoRedRight extends AutoBase {
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 0.5)) {}
 
-        encoderDrive(0.3, 26, 5);
+        encoderDrive(0.3, 24, 5);
 
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 1)) {}
@@ -237,9 +237,9 @@ public class CardbotAutoRedRight extends AutoBase {
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
             */
-            turnToDegree(0.3, 30);
+            turnToDegree(0.3, 20);
 
-            encoderDrive(0.5,24,5.0);
+            encoderDrive(0.5,12,5.0);
 
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.LEFT) {
@@ -251,9 +251,9 @@ public class CardbotAutoRedRight extends AutoBase {
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);*/
 
-            turnToDegree(0.3, 45);
+            turnToDegree(0.3, 35);
 
-            encoderDrive(0.5,28, 5.0);
+            encoderDrive(0.5,14, 5.0);
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.RIGHT) {
             /*//Turn Left 3 inches
@@ -265,8 +265,8 @@ public class CardbotAutoRedRight extends AutoBase {
             HardwareCardbot.reverse(robot.leftDrive2);
 
             encoderDrive(0.5,20,5.0);*/
-            turnToDegree(0.3, 15);
-            encoderDrive(0.5,15,5.0);
+            turnToDegree(0.3, 10);
+            encoderDrive(0.5,10,5.0);
         }
         robot.leftClaw.setPosition(robot.LEFT_OPEN);
         robot.rightClaw.setPosition(robot.RIGHT_OPEN);
