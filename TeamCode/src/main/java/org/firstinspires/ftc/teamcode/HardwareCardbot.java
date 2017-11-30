@@ -66,7 +66,7 @@ public class HardwareCardbot
 
     public NormalizedColorSensor cs = null;
 
-    public static HardwareCardbot robot = new HardwareCardbot();
+
 
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
