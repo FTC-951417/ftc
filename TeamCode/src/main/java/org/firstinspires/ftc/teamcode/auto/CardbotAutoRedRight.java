@@ -239,7 +239,7 @@ public class CardbotAutoRedRight extends AutoBase {
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
             */
-            turnToDegree(0.3, 20);
+            turnToDegree(0.3, 25);
 
             encoderDrive(0.5,12,5.0);
 
@@ -253,7 +253,7 @@ public class CardbotAutoRedRight extends AutoBase {
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);*/
 
-            turnToDegree(0.3, 35);
+            turnToDegree(0.3, 45);
 
             encoderDrive(0.5,14, 5.0);
         }
@@ -267,7 +267,7 @@ public class CardbotAutoRedRight extends AutoBase {
             HardwareCardbot.reverse(robot.leftDrive2);
 
             encoderDrive(0.5,20,5.0);*/
-            turnToDegree(0.3, 5);
+            turnToDegree(0.3, 9);
             encoderDrive(0.5,10,5.0);
         }
         robot.leftClaw.setPosition(robot.LEFT_OPEN);
