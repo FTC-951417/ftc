@@ -43,8 +43,10 @@ public class CardbotTeleopTank_Iterative extends OpMode {
 
     private double lgrip = 0;
     private double rgrip = 1;
-    private boolean diagMode = false;
-    private boolean forwardDiagMode = true;
+
+
+
+
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -67,6 +69,7 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         } catch(InterruptedException e){ telemetry.addData("Say3", "Sleep interrupted! Tell a programmer!"); }
         telemetry.addData("Say4", "Hit play to start control.");
         telemetry.update();
+
     }
 
     /*
@@ -96,21 +99,30 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         double right;
         robot.sensorArm.setPosition(0);
 
-        if (gamepad1.y && !diagMode) {
-            diagMode = true;
-        } else if (gamepad1.y && diagMode) {
-            diagMode = false;
-        }
-        if (gamepad1.dpad_up) {
-            forwardDiagMode = true;
-        }
-        if (gamepad1.dpad_down) {
-            forwardDiagMode = false;
-        }
+
 
         left = -gamepad1.left_stick_y;
         right = -gamepad1.right_stick_y;
-        if(gamepad1.right_trigger <= 0) { // Right trigger not pressed, full speed
+        /*
+        // Compute speed of left,right motors.
+        double deltaTime = time - prevTime;
+        double leftSpeed = (robot.leftDrive.getCurrentPosition() - prevLeftEncoderPosition) /
+                deltaTime;
+        double rightSpeed = (robot.rightDrive.getCurrentPosition() - prevRightEncoderPosition) /
+                deltaTime;
+        double leftSpeed2 = (robot.leftDrive2.getCurrentPosition() - prevLeftEncoderPosition) /
+                deltaTime;
+        double rightSpeed2 = (robot.rightDrive2.getCurrentPosition() - prevRightEncoderPosition) /
+                deltaTime;
+        // Track last loop() values.
+        prevTime = time;
+        prevLeftEncoderPosition = robot.leftDrive.getCurrentPosition();
+        prevRightEncoderPosition = robot.rightDrive.getCurrentPosition();
+        prevLeft2EncoderPosition = robot.leftDrive2.getCurrentPosition();
+        prevRight2EncoderPosition = robot.rightDrive2.getCurrentPosition();
+        */
+
+        if(gamepad1.right_trigger <= 0.2) { // Right trigger not pressed, full speed
             left = Range.clip(left, -1, 1);
             right = Range.clip(right, -1, 1);
         } else {  // ~1/3 speed, right trigger is pressed
@@ -124,21 +136,21 @@ public class CardbotTeleopTank_Iterative extends OpMode {
 
         if (gamepad2.left_trigger > 0.1) {
             // Reduce grip
-            lgrip -= 0.02;
-            rgrip += 0.02; // Right grip is reversed, 1 on right is 0 on left, etc.
+            lgrip -= 0.03;
+            rgrip += 0.03; // Right grip is reversed, 1 on right is 0 on left, etc.
         }
         if (gamepad2.right_trigger > 0.1) {
             // Increase grip
-            lgrip += 0.02;
-            rgrip -= 0.02; // Right grip is reversed, 1 on right is 0 on left, etc.
+            lgrip += 0.03;
+            rgrip -= 0.03; // Right grip is reversed, 1 on right is 0 on left, etc.
         }
         double distanceFromMid = 0.05;
-        rgrip = Range.clip(rgrip, 0, 0.5 - distanceFromMid); // Stop arm from crushing itself
-        lgrip = Range.clip(lgrip, 0.5 + distanceFromMid, 1); // * ^   ^    ^     ^       ^
-        rgrip = Range.clip(rgrip, 0, 1); // Stop arm from crushing itself
-        lgrip = Range.clip(lgrip, 0, 1); // * ^   ^    ^     ^       ^
+        rgrip = Range.clip(rgrip, 0.4, 1); // Stop arm from crushing itself
+        lgrip = Range.clip(lgrip, 0, 0.6); // * ^   ^    ^     ^       ^
         robot.leftClaw.setPosition(lgrip);
         robot.rightClaw.setPosition(rgrip);
+        robot.leftClaw2.setPosition(lgrip);
+        robot.rightClaw2.setPosition(rgrip);
 
         // Arm Functions
 
@@ -165,7 +177,6 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         telemetry.addData("Right Power", right);
         telemetry.addData("Left Grip", lgrip);
         telemetry.addData("Right Grip", rgrip);
-        telemetry.addData("Mode", diagMode ? "Diagonal" : "Strafe");
         //telemetry.addData("Arm Mode", isBraked ? "Brake" : "Free (WARNING! PLEASE RESET TO BRAKE WITH B on G2)");
         telemetry.update();
     }
@@ -183,7 +194,7 @@ public class CardbotTeleopTank_Iterative extends OpMode {
     }
 
     /* Range functions */
-
+    @SuppressWarnings("unused")
     public static boolean isNotInRangeExcludes(double in, double min, double max) {
         return in < min && in > max;
     }
