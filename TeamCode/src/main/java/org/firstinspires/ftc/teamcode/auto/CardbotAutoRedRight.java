@@ -286,7 +286,7 @@ public class CardbotAutoRedRight extends LinearOpMode {
 
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
-            encoderDrive(1, 6, 5.0);
+            encoderDrive(1, 8, 5.0);
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
 
@@ -297,7 +297,7 @@ public class CardbotAutoRedRight extends LinearOpMode {
 
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
-            encoderDrive(1, 8, 5.0);
+            encoderDrive(1, 11, 5.0);
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
             encoderDrive(0.5,26, 5.0);
@@ -307,11 +307,11 @@ public class CardbotAutoRedRight extends LinearOpMode {
 
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
-            encoderDrive(1, 2, 5.0);
+            encoderDrive(1, 6, 5.0);
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
 
-            encoderDrive(0.5,20,5.0);
+            encoderDrive(0.5,24,5.0);
         }
         robot.leftClaw.setPosition(LEFT_OPEN);
         robot.rightClaw.setPosition(RIGHT_OPEN);
