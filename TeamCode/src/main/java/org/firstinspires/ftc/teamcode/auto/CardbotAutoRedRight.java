@@ -187,6 +187,9 @@ public class CardbotAutoRedRight extends AutoBase {
             // Some error happened. Go right due to highest reliability
             vuMarkAnswer = RelicRecoveryVuMark.RIGHT;
         }
+        turnToDegree(0.3, 0);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 0.5)) {}
 
         telemetry.addData("Choose", "DPAD Right = Right, DPAD Up or Down = CENTER, DPAD Left = Left");
         telemetry.update();
@@ -214,10 +217,9 @@ public class CardbotAutoRedRight extends AutoBase {
         robot.mainArm.setPower(0);  // Stop moving arm after 800ms
 
 
-        turnToDegree(0.3, 0);
 
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 0.5)) {}
+
+
 
         encoderDrive(0.3, 24, 5);
 

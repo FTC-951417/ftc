@@ -43,17 +43,9 @@ public class CardbotTeleopTank_Iterative extends OpMode {
 
     private double lgrip = 0;
     private double rgrip = 1;
-    private boolean diagMode = false;
-    private boolean forwardDiagMode = true;
 
-    //PID Variables
 
-    private final double ticksPerRevolution = 1000;
-    private double prevTime;
-    private int prevLeftEncoderPosition;
-    private int prevRightEncoderPosition;
-    private int prevLeft2EncoderPosition;
-    private int prevRight2EncoderPosition;
+
 
 
     /*
@@ -77,11 +69,7 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         } catch(InterruptedException e){ telemetry.addData("Say3", "Sleep interrupted! Tell a programmer!"); }
         telemetry.addData("Say4", "Hit play to start control.");
         telemetry.update();
-        prevTime = 0;
-        prevLeftEncoderPosition = robot.leftDrive.getCurrentPosition();
-        prevLeft2EncoderPosition = robot.leftDrive2.getCurrentPosition();
-        prevRightEncoderPosition = robot.rightDrive.getCurrentPosition();
-        prevRight2EncoderPosition = robot.rightDrive2.getCurrentPosition();
+
     }
 
     /*
@@ -111,17 +99,7 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         double right;
         robot.sensorArm.setPosition(0);
 
-        if (gamepad1.y && !diagMode) {
-            diagMode = true;
-        } else if (gamepad1.y && diagMode) {
-            diagMode = false;
-        }
-        if (gamepad1.dpad_up) {
-            forwardDiagMode = true;
-        }
-        if (gamepad1.dpad_down) {
-            forwardDiagMode = false;
-        }
+
 
         left = -gamepad1.left_stick_y;
         right = -gamepad1.right_stick_y;
@@ -199,7 +177,6 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         telemetry.addData("Right Power", right);
         telemetry.addData("Left Grip", lgrip);
         telemetry.addData("Right Grip", rgrip);
-        telemetry.addData("Mode", diagMode ? "Diagonal" : "Strafe");
         //telemetry.addData("Arm Mode", isBraked ? "Brake" : "Free (WARNING! PLEASE RESET TO BRAKE WITH B on G2)");
         telemetry.update();
     }
