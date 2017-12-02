@@ -185,24 +185,7 @@ public class CardbotAutoBlueLeft extends AutoBase {
             vuMarkAnswer = RelicRecoveryVuMark.RIGHT;
         }
 
-        telemetry.addData("Choose", "DPAD Right = Right, DPAD Up or Down = CENTER, DPAD Left = Left");
-        telemetry.update();
 
-        boolean done = false;
-        while(!done) {
-            if (gamepad1.dpad_right) {
-                vuMarkAnswer = RelicRecoveryVuMark.RIGHT;
-                done = true;
-            }
-            if (gamepad1.dpad_up || gamepad1.dpad_down) {
-                vuMarkAnswer = RelicRecoveryVuMark.CENTER;
-                done = true;
-            }
-            if (gamepad1.dpad_left) {
-                vuMarkAnswer = RelicRecoveryVuMark.LEFT;
-                done = true;
-            }
-        }
 
         robot.mainArm.setPower(-0.8);  // Move arm up so it doesn't create friction
         runtime.reset();
