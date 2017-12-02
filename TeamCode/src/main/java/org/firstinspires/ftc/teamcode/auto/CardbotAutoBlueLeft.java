@@ -99,13 +99,14 @@ public class CardbotAutoBlueLeft extends AutoBase {
             }
         }
 
-        sleep(500);
+        runtime.reset();
+        while(opModeIsActive() && runtime.seconds() < 0.5) {}
 
         if(colors.red > colors.blue) {
             robot.sensorArm.setPosition(1);
             { // Turn Right (BACKWARD)
 
-                encoderDrive(0.1, -4, -4, 5.0);
+                encoderDrive(0.3, -4, -4, 5.0);
 
             }
             robot.sensorArm.setPosition(0.35);
@@ -115,7 +116,7 @@ public class CardbotAutoBlueLeft extends AutoBase {
             robot.sensorArm.setPosition(1);
             { // Turn Left (FORWARD)
 
-                encoderDrive(0.1, 4, 4, 5.0);
+                encoderDrive(0.3, 4, 4, 5.0);
 
             }
             robot.sensorArm.setPosition(0.35);
@@ -125,12 +126,12 @@ public class CardbotAutoBlueLeft extends AutoBase {
         if(dirId == 2) { // Turn Right (BACKWARD)
 
 
-            encoderDrive(0.1, -5, -5, 5.0);
+            encoderDrive(0.3, -5, -5, 5.0);
 
 
         } else if(dirId == 1) { // Turn Left (FORWARD)
 
-            encoderDrive(0.1, 5, 5.0);
+            encoderDrive(0.3, 5, 5.0);
 
         } else {
             requestOpModeStop(); // Error
@@ -192,7 +193,7 @@ public class CardbotAutoBlueLeft extends AutoBase {
         while (opModeIsActive() && (runtime.seconds() < 0.3)) {}
 
         robot.mainArm.setPower(0);  // Stop moving arm after 800ms
-        //encoderDrive(0.3, -26, 5.0);
+        encoderDrive(0.3, -20, 5.0);
 
 
         runtime.reset();

@@ -85,15 +85,16 @@ public class AutoTesting extends LinearOpMode {
 
         robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
-        robot.reverseLeft();
-        encoderDrive(1, degreesToInches(90), 5.0);
-        robot.reverseLeft();
+
 
 
 
         while(opModeIsActive()) {
+            angles = robot.imu.getAngularOrientation();
+            telemetry.addData("Yaw", angles.firstAngle);
             telemetry.update();
         }
+        robot.imu.close();
 
     }
 
