@@ -121,7 +121,7 @@ public class CardbotAutoBlueLeft extends AutoBase {
             robot.sensorArm.setPosition(0.35);
             dirId = 2;
         }
-
+        turnToDegree(0.2, 0);
         if(dirId == 2) { // Turn Right (BACKWARD)
 
 
@@ -192,17 +192,17 @@ public class CardbotAutoBlueLeft extends AutoBase {
         while (opModeIsActive() && (runtime.seconds() < 0.3)) {}
 
         robot.mainArm.setPower(0);  // Stop moving arm after 800ms
+        //encoderDrive(0.3, -26, 5.0);
 
-
-        turnToDegree(0.3, 180);
+        turnToDegree(0.1, -178);
 
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 0.5)) {}
 
-        encoderDrive(0.3, 26, 5);
+        encoderDrive(0.3, 24, 5);
 
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 1)) {}
+        //runtime.reset();
+        //while (opModeIsActive() && (runtime.seconds() < 1)) {}
 
         turnToDegree(0.3, 180);
 
@@ -216,21 +216,21 @@ public class CardbotAutoBlueLeft extends AutoBase {
 
             turnToDegree(0.3,180 - 45); // 45 degrees
 
-            encoderDrive(0.5,24,5.0);
+            encoderDrive(0.5,14,5.0);
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.RIGHT) {
 
 
             turnToDegree(0.3,180 - 30); // 30 degrees
 
-            encoderDrive(0.5,24, 5.0);
+            encoderDrive(0.5,14, 5.0);
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.LEFT) {
 
 
             turnToDegree(0.3,180 - 15); // 15 degrees
 
-            encoderDrive(0.5,24,5.0);
+            encoderDrive(0.5,14,5.0);
         }
         robot.leftClaw.setPosition(robot.LEFT_OPEN);
         robot.rightClaw.setPosition(robot.RIGHT_OPEN);
