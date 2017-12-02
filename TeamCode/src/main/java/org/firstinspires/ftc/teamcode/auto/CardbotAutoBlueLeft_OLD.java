@@ -152,8 +152,8 @@ public class CardbotAutoBlueLeft_OLD extends LinearOpMode {
         double LEFT_CLOSED = 1;
         double RIGHT_OPEN = 0.45;
         double RIGHT_CLOSED = 0;
-        robot.leftClaw.setPosition (LEFT_CLOSED);
-        robot.rightClaw.setPosition (RIGHT_CLOSED);
+        robot.leftClaw.setPosition(robot.LEFT_CLOSED);
+        robot.rightClaw.setPosition(robot.RIGHT_CLOSED);
 
 
 
@@ -304,7 +304,7 @@ public class CardbotAutoBlueLeft_OLD extends LinearOpMode {
 
             HardwareCardbot.reverse(robot.rightDrive);
             HardwareCardbot.reverse(robot.rightDrive2);
-            encoderDrive(0.3, 4, 5.0);
+            encoderDrive(0.3, 3, 5.0);
             HardwareCardbot.reverse(robot.rightDrive);
             HardwareCardbot.reverse(robot.rightDrive2);
 
@@ -321,8 +321,8 @@ public class CardbotAutoBlueLeft_OLD extends LinearOpMode {
 
             encoderDrive(0.5,24,22,5.0);
         }
-        robot.leftClaw.setPosition(LEFT_OPEN);
-        robot.rightClaw.setPosition(RIGHT_OPEN);
+        robot.leftClaw.setPosition(robot.LEFT_OPEN);
+        robot.rightClaw.setPosition(robot.RIGHT_OPEN);
         encoderDrive(0.3, -3, 5);
 
 
