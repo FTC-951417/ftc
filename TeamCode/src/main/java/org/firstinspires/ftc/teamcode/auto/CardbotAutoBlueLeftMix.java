@@ -231,7 +231,7 @@ public class CardbotAutoBlueLeftMix extends AutoBase {
 
             //Turn Right 10 inches
 
-            turnToDegree(0.3, 180 - 17);
+            turnToDegree(0.3, 180 - 18);
 
             encoderDrive(0.5,24, 5.0);
 
