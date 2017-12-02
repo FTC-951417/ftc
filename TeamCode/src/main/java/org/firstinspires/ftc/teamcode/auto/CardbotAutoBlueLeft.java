@@ -62,7 +62,13 @@ public class CardbotAutoBlueLeft extends AutoBase {
     @Override
     public void runOpMode() {
         alliance = new Alliance("blue");
+
+
         initOpMode();
+        //robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //robot.leftDrive2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //robot.rightDrive2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
@@ -106,7 +112,7 @@ public class CardbotAutoBlueLeft extends AutoBase {
             robot.sensorArm.setPosition(1);
             { // Turn Right (BACKWARD)
 
-                encoderDrive(0.3, -4, -4, 5.0);
+                encoderDrive(0.3, -3, 5.0);
 
             }
             robot.sensorArm.setPosition(0.35);
@@ -116,7 +122,7 @@ public class CardbotAutoBlueLeft extends AutoBase {
             robot.sensorArm.setPosition(1);
             { // Turn Left (FORWARD)
 
-                encoderDrive(0.3, 4, 4, 5.0);
+                encoderDrive(0.3, 3, 5.0);
 
             }
             robot.sensorArm.setPosition(0.35);
@@ -126,12 +132,12 @@ public class CardbotAutoBlueLeft extends AutoBase {
         if(dirId == 2) { // Turn Right (BACKWARD)
 
 
-            encoderDrive(0.3, -5, -5, 5.0);
+            encoderDrive(0.3, -3, 5.0);
 
 
         } else if(dirId == 1) { // Turn Left (FORWARD)
 
-            encoderDrive(0.3, 5, 5.0);
+            encoderDrive(0.3, 3, 5.0);
 
         } else {
             requestOpModeStop(); // Error
@@ -195,6 +201,7 @@ public class CardbotAutoBlueLeft extends AutoBase {
         robot.mainArm.setPower(0);  // Stop moving arm after 800ms
         encoderDrive(0.3, -20, 5.0);
 
+        turnToDegree(0.2, 0);
 
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 0.5)) {}
@@ -204,6 +211,8 @@ public class CardbotAutoBlueLeft extends AutoBase {
         encoderDrive(0.3, 28, 5);
         HardwareCardbot.reverse(robot.leftDrive);
         HardwareCardbot.reverse(robot.leftDrive2);
+
+        encoderDrive(0.2, -4,5);
 
         turnToDegree(0.1, 180);
 
@@ -217,21 +226,21 @@ public class CardbotAutoBlueLeft extends AutoBase {
 
         if(vuMarkAnswer == RelicRecoveryVuMark.CENTER) {
 
-            turnToDegree(0.3,180 - 45); // 45 degrees
+            turnToDegree(0.3,-(180 - 45)); // 45 degrees
 
             encoderDrive(0.5,14,5.0);
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.RIGHT) {
 
 
-            turnToDegree(0.3,180 - 30); // 30 degrees
+            turnToDegree(0.3,-(180 - 30)); // 30 degrees
 
             encoderDrive(0.5,14, 5.0);
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.LEFT) {
 
 
-            turnToDegree(0.3,180 - 15); // 15 degrees
+            turnToDegree(0.3,-(180 - 15)); // 15 degrees
 
             encoderDrive(0.5,14,5.0);
         }

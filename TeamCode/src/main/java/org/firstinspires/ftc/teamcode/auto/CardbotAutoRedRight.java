@@ -236,7 +236,7 @@ public class CardbotAutoRedRight extends AutoBase {
 
             turnToDegree(0.3, 47);
 
-            encoderDrive(0.5,14, 5.0);
+            encoderDrive(0.5,16, 5.0);
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.RIGHT) {
             /*//Turn Left 3 inches

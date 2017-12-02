@@ -166,6 +166,53 @@ public class CardbotAutoBlueLeft_OLD extends LinearOpMode {
         sleep(1500); // Wait for arm to move!
         //robot.sensorArm.setPosition(0);
 
+
+
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+
+        // OR...  Do Not Activate the Camera Monitor View, to save power
+        // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        /*
+         * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
+         * web site at https://developer.vuforia.com/license-manager.
+         */
+        parameters.vuforiaLicenseKey = "AbN5bVn/////AAAAGYB9Mi8Lq0aOlHLXV+cCXXCCaDrZfFL4Mc9vNmpdEhix11+l5w6Kx7KEp5NIY43aTY1m0c454n9rAqxX5i5Kn0xHj0qq6jFjABBYaWQR+S0eagZoICVhfmHEhrFb4udp84Yqaj6Lgrkj5AwqO7pd3rfqOe39vAo1XY4w5KAADo0anBPFGPElHNlnhQ5HQOrbULoeMgOd+mm1SWHGsI+FafcuEj/hGn+AhxueQQ97+/+nEEmEsdNJzHSK9vQ0M6QeyhKR4imAN9AG87e3HgHYD1bM4E340H5T5Tio7BeSO9jhPat++RRbD1TqM5H994zSGyl7FpO3Gvl8s+SY5DXhML06IYnCKPvMNxK+/VLE3Yvy";
+
+
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary;
+
+        relicTrackables.activate();
+        boolean end = false;
+        boolean increment = true;
+
+        RelicRecoveryVuMark vuMarkAnswer = null;
+        int i = -1;
+        while (!(end) && opModeIsActive()) {
+            i++;
+            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+                vuMarkAnswer = vuMark;
+                telemetry.addData("VuMark", "%s visible", vuMark);
+                end = true;
+            } else {
+                telemetry.addData("VuMark", "not visible");
+            }
+
+            telemetry.update();
+        }
+
+        telemetry.addData("VuMark:", vuMarkAnswer);
+        if(vuMarkAnswer == null || vuMarkAnswer == RelicRecoveryVuMark.UNKNOWN) {
+            // Some error happened. Go right due to highest reliability
+            vuMarkAnswer = RelicRecoveryVuMark.RIGHT;
+        }
         int dirId = 0;
         while(colors == null && opModeIsActive()){
             try {
@@ -222,52 +269,6 @@ public class CardbotAutoBlueLeft_OLD extends LinearOpMode {
 
         sleep(500);
 
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-
-        // OR...  Do Not Activate the Camera Monitor View, to save power
-        // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
-        /*
-         * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
-         * web site at https://developer.vuforia.com/license-manager.
-         */
-        parameters.vuforiaLicenseKey = "AbN5bVn/////AAAAGYB9Mi8Lq0aOlHLXV+cCXXCCaDrZfFL4Mc9vNmpdEhix11+l5w6Kx7KEp5NIY43aTY1m0c454n9rAqxX5i5Kn0xHj0qq6jFjABBYaWQR+S0eagZoICVhfmHEhrFb4udp84Yqaj6Lgrkj5AwqO7pd3rfqOe39vAo1XY4w5KAADo0anBPFGPElHNlnhQ5HQOrbULoeMgOd+mm1SWHGsI+FafcuEj/hGn+AhxueQQ97+/+nEEmEsdNJzHSK9vQ0M6QeyhKR4imAN9AG87e3HgHYD1bM4E340H5T5Tio7BeSO9jhPat++RRbD1TqM5H994zSGyl7FpO3Gvl8s+SY5DXhML06IYnCKPvMNxK+/VLE3Yvy";
-
-
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
-
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary;
-
-        relicTrackables.activate();
-        boolean end = false;
-        boolean increment = true;
-
-        RelicRecoveryVuMark vuMarkAnswer = null;
-        int i = -1;
-        while (!(end) && opModeIsActive()) {
-            i++;
-            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
-                vuMarkAnswer = vuMark;
-                telemetry.addData("VuMark", "%s visible", vuMark);
-                end = true;
-            } else {
-                telemetry.addData("VuMark", "not visible");
-            }
-
-            telemetry.update();
-        }
-
-        telemetry.addData("VuMark:", vuMarkAnswer);
-        if(vuMarkAnswer == null || vuMarkAnswer == RelicRecoveryVuMark.UNKNOWN) {
-            // Some error happened. Go right due to highest reliability
-            vuMarkAnswer = RelicRecoveryVuMark.RIGHT;
-        }
-
         robot.mainArm.setPower(-0.8);  // Move arm up so it doesn't create friction
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 0.3)) {}
@@ -292,7 +293,7 @@ public class CardbotAutoBlueLeft_OLD extends LinearOpMode {
 
             HardwareCardbot.reverse(robot.rightDrive);
             HardwareCardbot.reverse(robot.rightDrive2);
-            encoderDrive(0.3, 2, 5.0);
+            encoderDrive(0.3, 3, 5.0);
             HardwareCardbot.reverse(robot.rightDrive);
             HardwareCardbot.reverse(robot.rightDrive2);
 
@@ -314,7 +315,7 @@ public class CardbotAutoBlueLeft_OLD extends LinearOpMode {
 
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
-            encoderDrive(0.3, 2, 5.0);
+            encoderDrive(0.3, 1, 5.0);
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
 
@@ -322,7 +323,7 @@ public class CardbotAutoBlueLeft_OLD extends LinearOpMode {
         }
         robot.leftClaw.setPosition(LEFT_OPEN);
         robot.rightClaw.setPosition(RIGHT_OPEN);
-
+        encoderDrive(0.3, -3, 5);
 
 
 
