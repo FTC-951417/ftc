@@ -29,6 +29,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Path;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -191,7 +193,9 @@ public class CardbotTeleopTank_Iterative extends OpMode {
     private void setRight(double power){
         robot.rightDrive.setPower(power);
         robot.rightDrive2.setPower(power);
+
     }
+
 
     /* Range functions */
     @SuppressWarnings("unused")
@@ -219,4 +223,6 @@ public class CardbotTeleopTank_Iterative extends OpMode {
         telemetry.addData("Say", "Robot is stopped!");
         telemetry.update();
     }
+
+
 }

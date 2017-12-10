@@ -168,7 +168,8 @@ public class CardbotAutoRedRight extends AutoBase {
 
         RelicRecoveryVuMark vuMarkAnswer = null;
         int i = -1;
-        while (!(end) && opModeIsActive()) {
+        runtime.reset();
+        while (!(end) && opModeIsActive() && runtime.seconds() < 4.0) {
             i++;
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
