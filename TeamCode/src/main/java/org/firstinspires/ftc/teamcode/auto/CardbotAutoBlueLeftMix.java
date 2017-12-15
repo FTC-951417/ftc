@@ -170,14 +170,15 @@ public class CardbotAutoBlueLeftMix extends AutoBase {
             }
         }
 
-        sleep(500);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 0.5)) {}
 
         if(colors.red > colors.blue) {
             robot.sensorArm.setPosition(1);
             { // Turn Right (BACKWARD)
-                robot.reverseAll();
-                encoderDrive(0.2, 4, 4, 5.0);
-                robot.reverseAll();
+                //robot.reverseAll();
+                encoderDrive(0.1, -4, 5.0);
+                //robot.reverseAll();
             }
             robot.sensorArm.setPosition(0);
             dirId = 1;
@@ -186,53 +187,61 @@ public class CardbotAutoBlueLeftMix extends AutoBase {
             robot.sensorArm.setPosition(1);
             { // Turn Left (FORWARD)
 
-                encoderDrive(0.2, 4, 4, 5.0);
+                encoderDrive(0.1, 4, 5.0);
 
             }
             robot.sensorArm.setPosition(0);
             dirId = 2;
         }
-        turnToDegree(0.2, 0);
+        turnToDegree(0.1, 0);
         if(dirId == 2) { // Turn Right (BACKWARD)
 
-            robot.reverseAll();
-            encoderDrive(0.2, 4, 4, 5.0);
-            robot.reverseAll();
+            //robot.reverseAll();
+            encoderDrive(0.1, -3, 5.0);
+            //robot.reverseAll();
 
         } else if(dirId == 1) { // Turn Left (FORWARD)
 
-            encoderDrive(0.2, 4, 4, 5.0);
+            encoderDrive(0.1, 3, 5.0);
 
         } else {
             requestOpModeStop(); // Error
         }
 
-        sleep(500);
-        turnToDegree(0.2, 0);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 0.5)) {}
+        turnToDegree(0.1, 0);
         robot.mainArm.setPower(-0.8);  // Move arm up so it doesn't create friction
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 0.3)) {}
+
+
 
         robot.mainArm.setPower(0);  // Stop moving arm after 800ms
 
         robot.mainArm.setPower(0);
 
+        encoderDrive(0.3, -10, 4.0);
+
         HardwareCardbot.reverse(robot.leftDrive);
         HardwareCardbot.reverse(robot.leftDrive2);
-        encoderDrive(0.3, 28, 5);
+        encoderDrive(0.3, 8, 5);
         HardwareCardbot.reverse(robot.leftDrive);
         HardwareCardbot.reverse(robot.leftDrive2);
 
-        encoderDrive(0.3, 3, 5);
+        //encoderDrive(0.3, 3, 5);
 
-        sleep(1000); // Wait for motors to come to rest
+        turnToDegree(0.3, 0);
+
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 1)) {}
 
 
         if(vuMarkAnswer == RelicRecoveryVuMark.CENTER) {
 
             //Turn Right 10 inches
 
-            turnToDegree(0.3, 180 - 18);
+            turnToDegree(0.3, 180 - 28);
 
             encoderDrive(0.5,24, 5.0);
 
@@ -240,13 +249,13 @@ public class CardbotAutoBlueLeftMix extends AutoBase {
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.RIGHT) {
             //Turn Right 7-8 inches
-
-            turnToDegree(0.3, 180 - 35);
+            encoderDrive(0.3, -2, 2.0);
+            turnToDegree(0.3, 180 - 45);
 
             encoderDrive(0.5,25,5.0);
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.LEFT) {
-
+            encoderDrive(0.3, -4, 2.0);
 
             turnToDegree(0.3, 180 - 3);
 

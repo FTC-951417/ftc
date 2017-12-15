@@ -202,10 +202,10 @@ public class CardbotAutoRedRight extends AutoBase {
 
         robot.mainArm.setPower(0);  // Stop moving arm after 800ms
 
+        
 
 
-
-        encoderDrive(0.3, 26, 5);
+        encoderDrive(0.3, 24, 5);
 
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 1)) {}
@@ -221,7 +221,7 @@ public class CardbotAutoRedRight extends AutoBase {
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);
             */
-            turnToDegree(0.5, 33);
+            turnToDegree(0.5, dirId == 2 ? 28 : 25);
 
             encoderDrive(0.5,12,5.0);
 
@@ -235,7 +235,7 @@ public class CardbotAutoRedRight extends AutoBase {
             HardwareCardbot.reverse(robot.leftDrive);
             HardwareCardbot.reverse(robot.leftDrive2);*/
 
-            turnToDegree(0.3, 47);
+            turnToDegree(0.3, dirId == 2 ? 35 : 33);
 
             encoderDrive(0.5,16, 5.0);
         }
@@ -249,12 +249,12 @@ public class CardbotAutoRedRight extends AutoBase {
             HardwareCardbot.reverse(robot.leftDrive2);
 
             encoderDrive(0.5,15,5.0);*/
-            turnToDegree(0.3, 9);
+            turnToDegree(0.3, dirId == 2 ? 11 : 4);
             encoderDrive(0.5,10,5.0);
         }
         robot.leftClaw.setPosition(robot.LEFT_OPEN);
         robot.rightClaw.setPosition(robot.RIGHT_OPEN);
-        encoderDrive(1, -2, 5.0);
+        encoderDrive(1, -4, 5.0);
 
 
         telemetry.addData("Path", "Complete");
