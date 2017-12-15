@@ -78,7 +78,7 @@ import org.firstinspires.ftc.teamcode.HardwareCardbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto Blue !!!MIX!!!! Left", group="Left")
+@Autonomous(name="Auto Blue Left", group="Left")
 public class CardbotAutoBlueLeftMix extends AutoBase {
 
     public Alliance alliance;
@@ -177,7 +177,7 @@ public class CardbotAutoBlueLeftMix extends AutoBase {
             robot.sensorArm.setPosition(1);
             { // Turn Right (BACKWARD)
                 //robot.reverseAll();
-                encoderDrive(0.1, -4, 5.0);
+                encoderDrive(0.1, -3, 5.0);
                 //robot.reverseAll();
             }
             robot.sensorArm.setPosition(0);
@@ -187,7 +187,7 @@ public class CardbotAutoBlueLeftMix extends AutoBase {
             robot.sensorArm.setPosition(1);
             { // Turn Left (FORWARD)
 
-                encoderDrive(0.1, 4, 5.0);
+                encoderDrive(0.1, 3  , 5.0);
 
             }
             robot.sensorArm.setPosition(0);
@@ -225,7 +225,7 @@ public class CardbotAutoBlueLeftMix extends AutoBase {
 
         HardwareCardbot.reverse(robot.leftDrive);
         HardwareCardbot.reverse(robot.leftDrive2);
-        encoderDrive(0.3, 8, 5);
+        encoderDrive(0.3, 2, 5);
         HardwareCardbot.reverse(robot.leftDrive);
         HardwareCardbot.reverse(robot.leftDrive2);
 
@@ -250,7 +250,7 @@ public class CardbotAutoBlueLeftMix extends AutoBase {
         if(vuMarkAnswer == RelicRecoveryVuMark.RIGHT) {
             //Turn Right 7-8 inches
             encoderDrive(0.3, -2, 2.0);
-            turnToDegree(0.3, 180 - 45);
+            turnToDegree(0.3, 180 - 60);
 
             encoderDrive(0.5,25,5.0);
         }

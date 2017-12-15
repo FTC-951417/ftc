@@ -5,6 +5,7 @@ import android.graphics.Color;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
@@ -27,6 +28,7 @@ import java.util.Locale;
  * Created by 9514 on 11/20/2017.
  */
 @Autonomous(name="Auto Testing", group="test")
+@Disabled
 public class AutoTesting extends LinearOpMode {
 
     HardwareCardbot robot = new HardwareCardbot();

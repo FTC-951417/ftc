@@ -79,6 +79,7 @@ import org.firstinspires.ftc.teamcode.HardwareCardbot;
  */
 
 @Autonomous(name="Auto Blue !!!OLD!!! Left", group="Left")
+@Disabled
 public class CardbotAutoBlueLeft_OLD extends LinearOpMode {
 
     /* Declare OpMode members. */

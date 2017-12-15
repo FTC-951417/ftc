@@ -55,6 +55,7 @@ import org.firstinspires.ftc.teamcode.HardwareCardbot;
 
 
 @Autonomous(name="Auto Blue Left", group="Left")
+@Disabled
 public class CardbotAutoBlueLeft extends AutoBase {
 
 
