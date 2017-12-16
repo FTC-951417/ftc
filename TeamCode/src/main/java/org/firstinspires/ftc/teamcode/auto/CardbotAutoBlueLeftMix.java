@@ -244,7 +244,6 @@ public class CardbotAutoBlueLeftMix extends AutoBase {
             turnToDegree(0.3, 180 - 28);
 
             encoderDrive(0.5,24, 5.0);
-g
 
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.RIGHT) {

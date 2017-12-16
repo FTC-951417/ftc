@@ -60,86 +60,16 @@ public class CardbotAutoBlueRight extends AutoBase {
 
     @Override
     public void runOpMode() {
-        alliance = new Alliance("blue");
-        initOpMode();
+        initOpMode(); // Start IMU and map hardware
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
+        robot.leftClaw.setPosition(robot.LEFT_CLOSED);
+        robot.rightClaw.setPosition(robot.RIGHT_CLOSED); // Close claws
 
-        robot.leftClaw.setPosition (robot.LEFT_CLOSED);  //CLOSE CLAWS
-        robot.rightClaw.setPosition (robot.RIGHT_CLOSED);
-
-
-
-
-
-        robot.sensorArm.setPosition(1);   // Put down arm for color reading
+        robot.sensorArm.setPosition(1);
         sleep(1500); // Wait for arm to move!
-        //robot.sensorArm.setPosition(0.35);
-
-        int dirId = 0;
-        while(colors == null && opModeIsActive()){
-            try {
-                getColor();
-            } catch(InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        while(colors.red <= 0.005 || colors.blue <= 0.005 && opModeIsActive()) {
-            try {
-                getColor();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        sleep(500);
-
-        if(colors.red > colors.blue) {
-            robot.sensorArm.setPosition(1);
-            { // Backward
-                robot.reverseAll();
-                encoderDrive(0.2, 4, 4, 5.0);
-                robot.reverseAll();
-
-            }
-            robot.sensorArm.setPosition(0.35);
-            dirId = 1;
-        }
-        if(colors.blue > colors.red) {
-            robot.sensorArm.setPosition(1);
-            { // Forward
-
-                encoderDrive(0.2, 4, 4, 5.0);
-
-            }
-            robot.sensorArm.setPosition(0.35);
-            dirId = 2;
-        }
-
-        if(dirId == 2) { // Forward
-            robot.reverseAll();
-            encoderDrive(0.2, 4, 4, 5.0);
-            robot.reverseAll();
-        } else if(dirId == 1) { // Forward
-
-            encoderDrive(0.2, 4, 4, 5.0);
-
-        } else {
-            requestOpModeStop(); //Error
-        }
-
-        robot.mainArm.setPower(-0.8);  // Move arm up so it doesn't create friction
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 0.5)) {}
-
-        robot.mainArm.setPower(0);  // Stop moving arm after 800ms
-
-        //encoderDrive(0.3, 5, 5);
-
-
+        //robot.sensorArm.setPosition(0);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -166,7 +96,10 @@ public class CardbotAutoBlueRight extends AutoBase {
         boolean increment = true;
 
         RelicRecoveryVuMark vuMarkAnswer = null;
-        while (!(end) && opModeIsActive()) {
+        int i = -1;
+        runtime.reset();
+        while (!(end) && opModeIsActive() && runtime.seconds() < 4.0) {
+            i++;
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
                 vuMarkAnswer = vuMark;
@@ -184,54 +117,116 @@ public class CardbotAutoBlueRight extends AutoBase {
             // Some error happened. Go right due to highest reliability
             vuMarkAnswer = RelicRecoveryVuMark.RIGHT;
         }
-        robot.reverseAll();
-        encoderDrive(0.4, 20, 5.0); // Move back (this is because the VuMark is on the opposite side of the scoring area)
-        robot.reverseAll();
-        // Turn around (left/counterclockwise), this is because the right side has the color sensor and the robot is now "backwards"
-        HardwareCardbot.reverse(robot.leftDrive);
-        HardwareCardbot.reverse(robot.leftDrive2);
-        encoderDrive(1,25,5.0);
-        HardwareCardbot.reverse(robot.leftDrive);
-        HardwareCardbot.reverse(robot.leftDrive2);
+        int dirId = 0;
+        while(colors == null && opModeIsActive()){
+            try {
+                getColor();
+            } catch(InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
-        vuMarkAnswer = RelicRecoveryVuMark.CENTER;
+        while(colors.red <= 0.005 || colors.blue <= 0.005 && opModeIsActive()) {
+            try {
+                getColor();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 0.5)) {}
+
+        if(colors.red > colors.blue) {
+            robot.sensorArm.setPosition(1);
+            { // BACKWARD
+                //robot.reverseAll();
+                encoderDrive(0.1, -3, 5.0);
+                //robot.reverseAll();
+            }
+            robot.sensorArm.setPosition(0);
+            dirId = 1;
+        }
+        if(colors.blue > colors.red) {
+            robot.sensorArm.setPosition(1);
+            { // FORWARD
+
+                encoderDrive(0.1, 3  , 5.0);
+
+            }
+            robot.sensorArm.setPosition(0);
+            dirId = 2;
+        }
+        turnToDegree(0.1, 0);
+        if(dirId == 2) { // BACKWARD
+
+            //robot.reverseAll();
+            encoderDrive(0.1, -3, 5.0);
+            //robot.reverseAll();
+
+        } else if(dirId == 1) { // FORWARD
+
+            encoderDrive(0.1, 3, 5.0);
+
+        } else {
+            requestOpModeStop(); // Error
+        }
+
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 0.5)) {}
+
+        turnToDegree(0.1, 0);
+
+        robot.mainArm.setPower(-0.8);  // Move arm up so it doesn't create friction
+
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 0.3)) {}
+
+
+
+        robot.mainArm.setPower(0);  // Stop moving arm after 300ms
+
+        encoderDrive(0.3, -10, 4.0); // Go backward 10in
+
+        turnToDegree(0.3, 0);
+
+        encoderDrive(0.3, 14, -28, 5); // Turn right and outward
+
+        //encoderDrive(0.3, 3, 5);
+
+        turnToDegree(0.3, 180);
+
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 1)) {}
+
 
         if(vuMarkAnswer == RelicRecoveryVuMark.CENTER) {
-            //Turn Left 15 inches
-            robot.reverseAll();
-            encoderDrive(0.2, 3, 5.0);
-            robot.reverseAll();
-            HardwareCardbot.reverse(robot.leftDrive);
-            HardwareCardbot.reverse(robot.leftDrive2);
-            encoderDrive(0.5, 12, 5.0);
-            HardwareCardbot.reverse(robot.leftDrive);
-            HardwareCardbot.reverse(robot.leftDrive2);
-            encoderDrive(0.5,9, 5.0);
-        }
-        if(vuMarkAnswer == RelicRecoveryVuMark.LEFT) {
 
-            robot.leftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-            robot.leftDrive2.setDirection(DcMotorSimple.Direction.REVERSE);
-            encoderDrive(0.3, 18, 7.0);
-            robot.leftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
-            robot.leftDrive2.setDirection(DcMotorSimple.Direction.FORWARD);
+            //Turn Right 10 inches
 
-            encoderDrive(0.5,4, 5.0);
+            turnToDegree(0.3, -90);
+
+            encoderDrive(0.5,15, 5.0);
+
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.RIGHT) {
-            //Turn Left 12 inches
+            //Turn Right 7-8 inches
+            encoderDrive(0.3, -4, 2.0);
+            turnToDegree(0.3, -100);
 
-            HardwareCardbot.reverse(robot.leftDrive);
-            HardwareCardbot.reverse(robot.leftDrive2);
-            encoderDrive(1, 5, 5.0);
-            HardwareCardbot.reverse(robot.leftDrive);
-            HardwareCardbot.reverse(robot.leftDrive2);
+            encoderDrive(0.5, 15,5.0);
+        }
+        if(vuMarkAnswer == RelicRecoveryVuMark.LEFT) {
+            encoderDrive(0.3, -4, 2.0);
 
-            encoderDrive(0.5, 3, 5.0); // Go forward 22in
+            turnToDegree(0.3, -75);
+
+            encoderDrive(0.5,15,5.0);
         }
         robot.leftClaw.setPosition(robot.LEFT_OPEN);
-        robot.rightClaw.setPosition(robot.RIGHT_OPEN);  // Open claw to free glyph
-        //encoderDrive(0.5, -3, 5.0); Keeps glyph in place better
+        robot.rightClaw.setPosition(robot.RIGHT_OPEN);
+        encoderDrive(0.3, -3, 5);
+
 
 
 
