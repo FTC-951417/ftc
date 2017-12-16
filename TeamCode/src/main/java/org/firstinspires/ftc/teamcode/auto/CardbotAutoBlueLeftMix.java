@@ -244,15 +244,15 @@ public class CardbotAutoBlueLeftMix extends AutoBase {
             turnToDegree(0.3, 180 - 28);
 
             encoderDrive(0.5,24, 5.0);
-
+g
 
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.RIGHT) {
             //Turn Right 7-8 inches
-            encoderDrive(0.3, -2, 2.0);
-            turnToDegree(0.3, 180 - 60);
+            encoderDrive(0.3, -4, 2.0);
+            turnToDegree(dirId == 2 ? 0.45 : 0.3, dirId == 2 ? 180 - 57 : 180 - 62);
 
-            encoderDrive(0.5,25,5.0);
+            encoderDrive(0.5,28,5.0);
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.LEFT) {
             encoderDrive(0.3, -4, 2.0);
