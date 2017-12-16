@@ -157,11 +157,11 @@ public class CardbotAutoBlueRight extends AutoBase {
             robot.sensorArm.setPosition(0);
             dirId = 2;
         }
-        turnToDegree(0.1, 0);
+        turnToDegree(0.2, 0);
         if(dirId == 2) { // BACKWARD
 
             //robot.reverseAll();
-            encoderDrive(0.1, -3, 5.0);
+            encoderDrive(0.2, -4, 5.0); // Account for forward slide
             //robot.reverseAll();
 
         } else if(dirId == 1) { // FORWARD
@@ -175,7 +175,7 @@ public class CardbotAutoBlueRight extends AutoBase {
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 0.5)) {}
 
-        turnToDegree(0.1, 0);
+        turnToDegree(0.3, 0);
 
         robot.mainArm.setPower(-0.8);  // Move arm up so it doesn't create friction
 
@@ -186,18 +186,22 @@ public class CardbotAutoBlueRight extends AutoBase {
 
         robot.mainArm.setPower(0);  // Stop moving arm after 300ms
 
-        encoderDrive(0.3, -10, 4.0); // Go backward 10in
+        //encoderDrive(0.3, -10, 4.0); // Go backward 10in
 
         turnToDegree(0.3, 0);
 
-        encoderDrive(0.3, 14, -28, 5); // Turn right and outward
+        encoderDrive(0.5, -24, -30, 5); // Turn right and outward
 
         //encoderDrive(0.3, 3, 5);
 
-        turnToDegree(0.3, 180);
+        turnToDegree(0.3, -90);
+
+        if(dirId == 1) {
+            encoderDrive(0.5, -4, -6);
+        }
 
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 1)) {}
+        while (opModeIsActive() && (runtime.seconds() < 0.5)) {}
 
 
         if(vuMarkAnswer == RelicRecoveryVuMark.CENTER) {
@@ -211,21 +215,32 @@ public class CardbotAutoBlueRight extends AutoBase {
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.RIGHT) {
             //Turn Right 7-8 inches
-            encoderDrive(0.3, -4, 2.0);
-            turnToDegree(0.3, -100);
 
-            encoderDrive(0.5, 15,5.0);
+
+            encoderDrive(0.3, -4, 2.0);
+            turnToDegree(0.3, dirId == 1 ? -102 : -102);
+
+            encoderDrive(0.5, 21,5.0);
+
+            //encoderDrive(0.3, -4, 5.0);
+            //runtime.reset();
+            //while(opModeIsActive() && runtime.seconds() < 0.3);
+            //encoderDrive(0.3, 4, 5.0);
         }
         if(vuMarkAnswer == RelicRecoveryVuMark.LEFT) {
-            encoderDrive(0.3, -4, 2.0);
+            encoderDrive(0.3, -4, 2);
 
-            turnToDegree(0.3, -75);
+            turnToDegree(0.3, -77);
 
-            encoderDrive(0.5,15,5.0);
+            encoderDrive(0.5,17,5.0);
         }
         robot.leftClaw.setPosition(robot.LEFT_OPEN);
         robot.rightClaw.setPosition(robot.RIGHT_OPEN);
-        encoderDrive(0.3, -3, 5);
+
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 0.6)) {}
+
+        encoderDrive(0.5, -4, 5);
 
 
 
